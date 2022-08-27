@@ -1,0 +1,68 @@
+* Salut!
+
+This repository stores the source code of [[https://grtcdr.tn][grtcdr.tn]].
+
+* Structure
+
+The skeleton, i.e. the specification defining the various components
+of this site, is defined in [[file:site/publish.el][publish.el]].
+
+* Setup
+
+Clone the repository:
+
+#+begin_example
+git clone https://github.com/vivmaniero/vivmaniero.github.io.git vm.grtcdr.tn
+#+end_example
+
+* Reproducing
+
+If you wish to reproduce this site locally, the most overarching
+dependency is [[https://www.gnu.org/software/emacs/][GNU Emacs]]. Among its many features, Emacs includes a
+module named [[https://github.com/emacs-mirror/emacs/blob/master/lisp/org/ox-publish.el][ox-publish]] which can be summarized as a static site
+builder.
+
+Once you've set that up, you should install this project's development
+dependencies. In order to do that, position yourself at the project
+root, i.e. the location where you cloned this repository, and then run
+=npm install=.
+
+You'll also want to install [[https://www.gnu.org/software/make/][GNU Make]] to reap the benefits of the [[https://en.wikipedia.org/wiki/Build_automation][build system]] in use.
+  
+* Building
+
+The provided [[file:Makefile][Makefile]] contains two recipes, one to compile the
+included stylesheets from =.less= to =.css=, and another to publish
+the site, which outputs a =public/= directory as per the [[file:site/publish.el][site specification]].
+
+From the command-line, position yourself at the root of the project,
+and run =make=.
+
+* Development
+
+In order to fully utilize the site during development, you should
+serve the ~public~ directory with a web server, e.g. [[https://github.com/svenstaro/miniserve][miniserve]]:
+
+#+begin_src sh
+cd grtcdr.tn
+miniserve public
+#+end_src
+
+* Deployment
+
+This site is hosted on GitHub Pages, and utilizes a [[file:.github/workflows/pages.yml][CI/CD workflow]] to
+build and deploy the site with every commit made to the =main= branch.
+
+The workflow is split into two major jobs, =build= and =deploy=.
+
+=build= installs the project's development dependencies and builds the
+site from scratch, using the provided =Makefile=.
+
+The output of this process generates an artifact, the =public= directory.
+
+This artifact is then transferred to =deploy=, which handles the
+deployment of the site to the GitHub Pages servers.
+
+* Copying
+
+The source code of this site is [[file:COPYING][MIT]].

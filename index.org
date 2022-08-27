@@ -1,0 +1,19 @@
+#+TITLE: Greetings
+#+SETUPFILE: setup.org
+#+HTML_HEAD: <script src="javascripts/main.js"></script>
+
+* About us
+
+*vivmaniero* is a sandbox for independently-written tools and
+documentation.
+
+All the tools are authored and maintained by [[https://grtcdr.tn][Aziz Ben Ali]].
+
+We create [[https://en.wikipedia.org/wiki/Free_software][libre software]] with the goal of benefiting the ESPRIT
+ecosystem.
+
+* Works
+
++ [[https://github.com/vivmaniero/dork][dork]]: Grade calculator.
++ [[https://github.com/vivmaniero/sched][sched]]: Harness the power of the shell to retrieve this week’s schedule.
++ [[https://github.com/vivmaniero/dbms3][dbms3]]: Course notes for Database Management Systems 3^rd year class.
