@@ -5,12 +5,8 @@
 * About us
 
 *vivmaniero* is a sandbox for independently-written tools and
-documentation.
-
-All the tools are authored and maintained by [[https://grtcdr.tn][Aziz Ben Ali]].
-
-We create [[https://en.wikipedia.org/wiki/Free_software][libre software]] with the goal of benefiting the ESPRIT
-ecosystem.
+documentation, we create [[https://en.wikipedia.org/wiki/Free_software][libre software]] with the goal of benefiting
+the ESPRIT ecosystem.
 
 * Works
 
