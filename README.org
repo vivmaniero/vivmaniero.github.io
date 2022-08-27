@@ -1,6 +1,6 @@
 * Salut!
 
-This repository stores the source code of [[https://grtcdr.tn][grtcdr.tn]].
+This repository stores the source code of [[https://vm.grtcdr.tn][vm.grtcdr.tn]].
 
 * Structure
 
