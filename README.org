@@ -44,7 +44,7 @@ In order to fully utilize the site during development, you should
 serve the ~public~ directory with a web server, e.g. [[https://github.com/svenstaro/miniserve][miniserve]]:
 
 #+begin_src sh
-cd grtcdr.tn
+cd vm.grtcdr.tn
 miniserve public
 #+end_src
 
