@@ -1,5 +1,0 @@
-(setq org-publish-cache (make-hash-table :test 'equal :weakness nil :size 100))
-(puthash ":project:" "images" org-publish-cache)
-(puthash ":cache-file:" "/home/grtcdr/projects/vm.grtcdr.tn/.cache/images.cache" org-publish-cache)
-(puthash "X32e5dc8e3c084c93c84d6aceaca78636dcd1e0c5" '(25466 27906 63188 760000) org-publish-cache)
-(puthash "Xf9236b6dfd35b1cb07d08d16d170ec45a10d0bdc" '(25466 27906 63188 760000) org-publish-cache)

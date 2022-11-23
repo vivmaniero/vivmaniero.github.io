@@ -1,7 +1,0 @@
-(setq org-publish-cache (make-hash-table :test 'equal :weakness nil :size 100))
-(puthash ":project:" "content" org-publish-cache)
-(puthash ":cache-file:" "/home/grtcdr/projects/vm.grtcdr.tn/.cache/content.cache" org-publish-cache)
-(puthash "/home/grtcdr/projects/vm.grtcdr.tn/src/404.org" '(:crossrefs nil :index nil) org-publish-cache)
-(puthash "X98255a0fa5bfde6fb46b262626b8deddbb3897ed" '(25449 30466 310183 884000) org-publish-cache)
-(puthash "/home/grtcdr/projects/vm.grtcdr.tn/src/index.org" '(:crossrefs nil :index nil) org-publish-cache)
-(puthash "X59e34c437081f63a0673f59b2ee0df05288e47a1" '(25466 28976 63168 354000) org-publish-cache)
