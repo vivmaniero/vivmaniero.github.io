@@ -1,0 +1,1757 @@
+#+TITLE: Database Management Systems III
+#+INDEX: Database Management Systems III
+
+#+begin_export ascii
+MIT License
+
+Copyright (c) 2022 Aziz Ben Ali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+#+end_export
+
+* TP1: Langage de Définition des Données (LDD)
+
+#+HTML: <img alt="LDD schemas" src="https://drive.google.com/uc?id=1Kx7ffTGp-Rbm7N6JqGoGvbfJS17CeVtw" width="70%"/>
+
+** Question 1
+
+Donner l'ordre de création des tables.
+
+/Réponse/: Étant donné que ces tables ont des relations entre elles,
+nous devons les créer dans le bon ordre:
+
+1. =Restaurants=
+2. =Plats=
+3. =Livreurs=
+4. =Clients=
+5. =Commandes=
+6. =LigneCommande=
+
+** Question 2
+Créer toutes les tables en tenant en considération les contraintes suivantes:
++ Le numéro de la CIN du livreur et la quantité commandée sont obligatoires.
++ Le nom d'un restaurant, le login d'un client et le numéro de la cin du livreur sont uniques.
++ Les spécialités sont: tunisienne, française, italienne, mexicaine, thaïlandaise et japonaise.
++ Le rating a 0 comme valeur par défaut.
++ Le rating est un entier supérieur ou égal à 0 qui décrit la note moyenne d'un plat et qui ne dépasse pas 5.
++ Le numéro de téléphone et le numéro de la cin possèdent exactement 8 chiffres.
++ La date de la livraison est toujours supérieure à la date de la commande.
++ Les quantités d'un plat même commandé ne peuvent pas dépasser 20.
++ Le prix d'un plat est un nombre strictement positif et ne dépasse pas les 80 dinars.
+
+*** Création de la table restaurants
+#+BEGIN_SRC sql
+  CREATE TABLE restaurants (
+     idR VARCHAR2(20),
+     nom VARCHAR2(20) UNIQUE,
+     specialite VARCHAR2(20),
+     ville VARCHAR2(20),
+     tel NUMBER,
+     CONSTRAINT pk_idr
+     PRIMARY KEY (idR),
+     CONSTRAINT ck_tel
+     CHECK (LENGTH(tel) = 8),
+     CONSTRAINT ck_specialite
+     CHECK (specialite IN
+	   ('tunisienne', 'française', 'italienne',
+	    'mexicaine', 'thailandaise', 'japonaise'))
+  );
+#+END_SRC
+
+*** Création de la table plats
+#+BEGIN_SRC sql
+  CREATE TABLE plats (
+     ref_P VARCHAR2(20),
+     idR VARCHAR2(20),
+     nomP VARCHAR2(30),
+     prix NUMBER(4),
+     freeGluten INTEGER,
+     disponible INTEGER,
+     rating INTEGER DEFAULT 0,
+     CONSTRAINT pk_ref_p
+     PRIMARY KEY (ref_P),
+     CONSTRAINT fk_idr
+     FOREIGN KEY (idR)
+     REFERENCES restaurants(idR),
+     CONSTRAINT ck_rating
+     CHECK (rating BETWEEN 0 AND 5),
+     CONSTRAINT ck_prix
+     CHECK (prix > 0 AND prix <= 80)
+  );
+#+END_SRC
+
+*** Création de la table livreurs
+#+BEGIN_SRC sql
+CREATE TABLE livreurs (
+   idL INTEGER,
+   cin INTEGER NOT NULL,
+   nom VARCHAR2(30),
+   prenom VARCHAR2(30),
+   tel number,
+   dateRec Date,
+   CONSTRAINT pk_idl
+   PRIMARY KEY (idL),
+   CONSTRAINT ck_tel_2
+   CHECK (length(tel) = 8),
+   CONSTRAINT ck_cin
+   CHECK (LENGTH(cin) = 8),
+   CONSTRAINT uq_cin
+   UNIQUE (cin)
+);
+#+END_SRC
+
+*** Création de la table clients
+#+BEGIN_SRC sql
+  CREATE TABLE clients (
+     idCli INTEGER,
+     login VARCHAR2(20) UNIQUE,
+     mdp VARCHAR2(20),
+     nom VARCHAR2(30),
+     prenom VARCHAR2(30),
+     tel NUMBER,
+     ville VARCHAR2(20),
+     CONSTRAINT pk_idcli
+     PRIMARY KEY (idCli),
+     CONSTRAINT ck_tel_3
+     CHECK (LENGTH(tel) = 8)
+  );
+#+END_SRC
+
+*** Création de la table commandes
+#+BEGIN_SRC sql
+CREATE TABLE commandes (
+   idC INTEGER,
+   idL INTEGER,
+   idCli INTEGER,
+   total number(4),
+   dateHCom timestamp,
+   dateHLiv timestamp,
+   paye INTEGER,
+   CONSTRAINT pk_idc
+   PRIMARY KEY (idC),
+   CONSTRAINT fk_idl
+   FOREIGN KEY (idL)
+   REFERENCES livreurs(idL),
+   CONSTRAINT fk_idcli
+   FOREIGN KEY (idCli)
+   REFERENCES clients(idCli),
+   CONSTRAINT ck_date
+   CHECK (dateHLiv > dateHCom)
+);
+#+END_SRC
+
+*** Création de la table lignecommande
+#+BEGIN_SRC sql
+CREATE TABLE lignecommande (
+   idC INTEGER,
+   ref_P VARCHAR2(20),
+   quantite INTEGER NOT NULL,
+   CONSTRAINT pk_idc_2
+   PRIMARY KEY (idC, ref_P),
+   CONSTRAINT fk_idc
+   FOREIGN KEY (idC)
+   REFERENCES commandes(idC),
+   CONSTRAINT fk_ref_p
+   FOREIGN KEY (ref_P)
+   REFERENCES plats(ref_P),
+   CONSTRAINT ck_quantite
+   CHECK (quantite <= 20)
+);
+#+END_SRC
+
+** Question 3
+Changer le type de la colonne disponible de la table =Plats= en chaine
+de caractères (3). Cette colonne prend comme valeur ={oui, non}= et
+non par défaut. Ajouter les contraintes nécessaires.
+
+#+BEGIN_SRC sql
+ALTER TABLE plats MODIFY (
+   disponible VARCHAR2(3) DEFAULT 'non' CHECK (disponible IN ('oui', 'non'))
+);
+#+END_SRC
+
+** Question 4
+
+Ajouter une colonne rating au niveau de la table =Restaurants=. Ajouter
+les contraintes nécessaires à cette colonne pour qu'elle ait les mêmes
+propriétés que la colonne rating de la table PLATS.
+#+BEGIN_SRC sql
+ALTER TABLE restaurants ADD (
+   rating INTEGER DEFAULT 0,
+   CONSTRAINT ck_rating_2
+   CHECK (rating BETWEEN 0 AND 5)
+);
+#+END_SRC
+
+** Question 5
+
+Créer un synonyme public =LC= pour la table =LIGNECOMMANDE=.
+#+BEGIN_SRC sql
+CREATE PUBLIC SYNONYM LC FOR lignecommande;
+#+END_SRC
+
+*** Lancer une description sur la table en utilisant le synonyme.
+
+#+BEGIN_SRC sql
+DESCRIBE LC;
+#+END_SRC
+
+** Question 6
+
+Créer une séquence =SEQ_RES= (qui sera utilisée dans le prochain TP) pour insérer des
+données au niveau de la table =Restaurants=. Cette séquence commence avec la valeur
+1 et sera incrémentée de 1.
+#+BEGIN_SRC sql
+CREATE SEQUENCE seq_res INCREMENT BY 1 START WITH 1;
+#+END_SRC
+
+*** L'utilisation de cette séquence sera-t-il restreint uniquement à la
+table =Restaurants=?
+
+Cette sequence n'est pas restreinte à la table =Restaurants=, toutes
+autres tables peuvent l'utiliser.
+
+** Question 7
+Créer une vue =V_RESTO_GLUTF= qui permet de lister les restaurants qui proposent des
+plats sans gluten (=1) (et disponibles). L'affichage concernera le nom, la spécialité et la
+ville du restaurant ainsi que le nom, le prix et le rating du plat.
+#+BEGIN_SRC sql
+CREATE VIEW v_resto_glutf AS
+SELECT restaurants.nom, restaurants.specialite,
+       restaurants.ville, plats.nomP,
+       plats.prix, plats.rating
+FROM restaurants
+INNER JOIN plats
+ON restaurants.idR = plats.idR
+WHERE freeGluten = 1 AND disponible = 'oui';
+#+END_SRC
+
+** Question 8
+Créer une vue =V_RESTO_TUN= ne permettant que la manipulation des restaurants de
+spécialité tunisienne.
+#+BEGIN_SRC sql
+CREATE VIEW v_resto_tun AS
+SELECT * FROM restaurants WHERE specialite = 'tunisienne'
+WITH CHECK OPTION;
+#+END_SRC
+
+** Question 9
+
+Créer une vue =V_COM_P_DET= qui permet de lister les détails des commandes payées
+=(COMMANDES.paye = 1)=. L'affichage concernera, pour chaque commande, son ID, le nom des plats
+et les quantités commandées.
+#+BEGIN_SRC sql
+CREATE VIEW v_com_p_det AS
+SELECT commandes.idC, plats.nomP, LC.quantite
+FROM commandes
+INNER JOIN LC
+ON commandes.idC = LC.idC
+INNER JOIN plats
+ON LC.ref_P = plats.ref_P
+WHERE commandes.paye = 1;
+#+END_SRC
+
+** Question 10
+
+Créer un index =IND_GLU= permettant l'accélération de la recherche des plats sans gluten.
+#+BEGIN_SRC sql
+CREATE index ind_glu
+ON plats(freeGluten);
+#+END_SRC
+
+*** Cet index peut-il être unique?
+
+Non, parcequ'il n'y a aucune garantie que la valeur de la colonne freeGluten va etre unique pour tout les plats.
+
+-----
+
+
+* TP3: Langage d'Interrogation des Données (LID)
+** Question 1
+
+Afficher toutes les informations concernant tous les restaurants.
+#+BEGIN_SRC sql
+SELECT * FROM restaurants;
+#+END_SRC
+
+** Question 2
+
+Afficher la liste des restaurants de chaque ville, ordonner l'affichage par ordre décroissant
+des villes.
+#+BEGIN_SRC sql
+SELECT * FROM restaurants ORDER BY ville DESC;
+#+END_SRC
+
+** Question 3
+
+Afficher les ID des plats commandés au moins une fois.
+#+BEGIN_SRC sql
+SELECT plats.ref_p FROM plats
+INNER JOIN lignecommande
+ON lignecommande.ref_p = plats.ref_p
+WHERE lignecommande.quantite >= 1;
+#+END_SRC
+
+** Question 4
+
+Afficher le nom des restaurants dont le rating n'a pas été calculé.
+#+BEGIN_SRC sql
+SELECT nom FROM restaurants WHERE RATING IS NULL;
+#+END_SRC
+
+** Question 5
+
+Afficher la liste des plats disponibles par ordre décroissant prix.
+#+BEGIN_SRC sql
+SELECT * FROM plats WHERE disponible = 'oui';
+#+END_SRC
+
+** Question 6
+
+Afficher les restaurants de spécialité tunisienne et qui sont situés à
+/'Tunis'/.
+#+BEGIN_SRC sql
+SELECT * FROM restaurants
+WHERE specialite = 'tunisienne'
+AND ville = 'Tunis';
+#+END_SRC
+
+** Question 7
+
+Afficher les noms en majuscules, les prénoms en minuscule, les villes
+avec la première lettre en majuscule de tous les clients de
+/'Resto.tn'/. Ordonner la liste par ville.
+#+BEGIN_SRC sql
+SELECT UPPER(nom), LOWER(prenom), INITCAP(ville)
+FROM clients ORDER BY ville;
+#+END_SRC
+
+** Question 8
+
+Afficher la liste des clients dont la première lettre de leur nom est /'b'/ et où leur prénom se
+termine par /'d'/ ou contient la lettre /'a'/.
+#+BEGIN_SRC sql
+SELECT * FROM clients
+WHERE nom LIKE 'b%' AND (prenom LIKE '%d' OR prenom LIKE '%a%');
+#+END_SRC
+
+** Question 9
+
+Afficher la liste des livreurs qui ont été embauchés depuis 8 mois.
+#+BEGIN_SRC sql
+SELECT * FROM livreurs WHERE FLOOR(MONTHS_BETWEEN(sysdate, daterec)) >= 8;
+#+END_SRC
+
+** Question 10
+
+Afficher toutes les commandes qui ont été passées pendant le troisième
+trimestre de l'année dernière.
+#+BEGIN_SRC sql
+SELECT * FROM commandes
+WHERE EXTRACT(YEAR FROM datehcom) = EXTRACT(YEAR from sysdate) - 1
+AND EXTRACT(MONTH FROM datehcom) BETWEEN 6 AND 9;
+#+END_SRC
+
+** Question 11
+
+Afficher la liste des plats sans gluten dont le prix est compris entre
+10 et 30 dinars ordonnée par disponibilité (les plats disponibles sont
+affichés en premier lieu).
+#+BEGIN_SRC sql
+SELECT * FROM plats
+WHERE freegluten = 1 AND prix BETWEEN 10 AND 30
+ORDER BY disponible DESC;
+#+END_SRC
+
+** Question 12
+
+Afficher les commandes qui ont été livrées en moins de 30 minutes,
+l'affichage concernera l'ID de la commande, celui du livreur ainsi que
+le temps de livraison de la commande et sera ordonné selon ce dernier
+par ordre décroissant.
+#+BEGIN_SRC sql
+SELECT idc, idl, EXTRACT(MINUTE FROM (datehliv - datehcom))
+FROM commandes
+WHERE EXTRACT(MINUTE FROM (datehliv - datehcom)) <= 30
+AND EXTRACT(HOUR FROM (datehliv - datehcom)) = 0
+ORDER BY (datehliv - datehcom) DESC;
+#+END_SRC
+
+** Question 13
+Afficher le prix du plat le plus cher, celui du plat le moins cher ainsi que le prix moyen
+arrondi des plats et ce pour:
+
++ Tous les plats
+
+#+BEGIN_SRC sql
+SELECT MAX(prix), MIN(prix), AVG(prix) FROM plats;
+#+END_SRC
+
++ Les plats sans gluten:
+#+BEGIN_SRC sql
+SELECT MAX(prix), MIN(prix), AVG(prix) FROM plats WHERE freegluten = 1;
+#+END_SRC
+
++ Les plats du restaurant /'R1'/:
+#+BEGIN_SRC sql
+SELECT MAX(prix), MIN(prix), AVG(prix) FROM plats WheRE idr = 'R1';
+#+END_SRC
+
+** Question 14
+Afficher une liste numérotée des plats selon un ordre décroissant des prix.
+
++ Un premier affichage concernera le numéro, le nom du plat et son prix:
+#+BEGIN_SRC sql
+SELECT ROW_NUMBER() OVER(ORDER BY prix DESC) AS "N Ligne", ref_P, nomP, prix FROM Plats p;
+#+END_SRC
+
++ Un deuxième affichage concernera le numéro et tous les champs relatifs au plat:
+#+BEGIN_SRC sql
+SELECT ROW_NUMBER() OVER(ORDER BY prix DESC) AS "N Ligne", p.* FROM Plats p;
+#+END_SRC
+
+** Question 15
+
+Affiner la liste précédente selon la composition des plats (avec ou sans gluten).
+#+BEGIN_SRC sql
+SELECT ROW_NUMBER() OVER(ORDER BY prix DESC) AS "N Ligne", p.* FROM Plats p ORDER BY freeGluten;
+#+END_SRC
+
+** Question 16
+
+Afficher un classement des restaurants selon le plus noté (rating),
+toutes les informations concernant les restaurants doivent être
+affichées.
+#+BEGIN_SRC sql
+SELECT RANK() OVER(ORDER BY rating DESC), R.* FROM Restaurants R;
+#+END_SRC
+
+** Question 17
+
+Affiner l'affichage précédent avec un classement des restaurants les plus notés selon les
+spécialités.
+#+BEGIN_SRC sql
+SELECT RANK() OVER(ORDER BY rating DESC), R.* FROM Restaurants R ORDER BY specialite;
+#+END_SRC
+
+** Question 18
+
+#+BEGIN_SRC sql
+SELECT AVG(prix) AS "Prix Moyen", P.idR, R.nom
+FROM plats P, restaurants R
+WHERE R.idR = P.idR
+GROUP BY P.idR, R.nom;
+#+END_SRC
+
+** Question 19
+
+#+BEGIN_SRC sql
+SELECT idR, nomP, rating, prix As "Ancien Prix",
+                  CASE
+                        WHEN prix BETWEEN 5 AND 20 AND rating > 2 THEN prix * 0.9
+                        WHEN prix > 20 AND rating = 5 THEN prix * 0.85
+                        ELSE prix
+                  END AS "Nouveau Prix"
+FROM plats;
+#+END_SRC
+
+** Question 20
+
+#+BEGIN_SRC sql
+SELECT * FROM Restaurants R, Plats P
+WHERE P.idR = R.idR
+MINUS
+SELECT * FROM Restaurants R, Plats P
+WHERE P.idR = R.idR and P.disponible = 'oui';
+#+END_SRC
+
+** Question 21
+
+#+BEGIN_SRC sql
+SELECT * FROM Restaurants R
+INNER JOIN Plats P
+ON P.idR = R.idR
+WHERE P.disponible = 'non' AND P.freeGluten = 0 AND (VILLE = 'Tunis' OR VILLE = 'Sousse');
+#+END_SRC
+
+** Question 22
+
+Il y a deux façons de procéder, soit avec une jointure:
+
+#+begin_src sql
+SELECT ref_P FROM LC
+INNER JOIN commandes AS 'com'
+ON lc.idc = com.idc
+INNER JOIN clients AS 'cl'
+ON com.idcli = cl.idcli
+WHERE cl.nom LIKE '%a%';
+#+end_src
+
+Ou avec une sélection imbriquée:
+
+#+BEGIN_SRC sql
+SELECT ref_P FROM LC 
+WHERE idc IN (SELECT idc FROM commandes WHERE idcli IN ( SELECT idcli FROM clients WHERE nom LIKE '%a%' ) )
+#+END_SRC
+
+** Question 23
+
+#+BEGIN_SRC sql
+SELECT AVG(prix) FROM plats WHERE idr = (SELECT idr FROM restaurants WHERE nom LIKE 'Chili''s');
+#+END_SRC
+
+** Question 25
+
+#+begin_src sql
+SELECT nomP, prix FROM plats P
+INNER JOIN restaurants R
+ON R.idR = P.idR
+WHERE R.specialite = 'italienne' AND P.prix = (SELECT MAX(prix) FROM plats INNER JOIN restaurants ON plats.idR = restaurants.idR where restaurants.specialite = 'italienne');
+#+end_src
+
+** Question 26
+
+*** A)
+
+#+BEGIN_SRC sql
+ALTER TABLE Clients
+ADD parrain NUMBER
+REFERENCES clients(idCli);
+#+END_SRC
+
+*** B)
+
+#+BEGIN_SRC sql
+UPDATE Clients SET
+parrain=(SELECT idCli from Clients WHERE nom='Dupont' AND prenom='Marie')
+WHERE idCli IN (2,3,4);
+#+END_SRC
+
+*** C)
+
+#+BEGIN_SRC sql
+SELECT C.nom, C.prenom, P.nom AS 'Nom du parrain', P.prenom AS 'Prenom du parrain'
+FROM clients P
+INNER JOIN clients P
+ON C.idCli = P.parrain;
+#+END_SRC
+
+** Question 27
+
+#+BEGIN_SRC sql
+SELECT * FROM Clients Cli
+INNER JOIN Commandes Com
+ON Cli.idCli = Com.idCli
+INNER JOIN LC
+ON LC.idC = Com.idC
+INNER JOIN Plats P
+ON P.ref_P = LC.ref_P
+MINUS
+SELECT * FROM Clients Cli
+INNER JOIN Commandes Com
+ON Cli.idCli = Com.idCli
+INNER JOIN LC
+ON LC.idC = Com.idC
+INNER JOIN Plats P
+ON P.ref_P = LC.ref_P
+WHERE P.idR = 'R1';
+#+END_SRC
+
+** Question 29
+
+#+BEGIN_SRC sql
+SELECT MAX(prix), specialite from plats P, restaurants r 
+WHERE R.idR = P.idR GROUP BY specialite ORDER BY MAX(prix) DESC;
+#+END_SRC
+
+** Question 30
+
+#+BEGIN_SRC sql
+SELECT cli.nom, cli.prenom, COUNT(c.idc)
+FROM clients cli 
+INNER JOIN commandes c 
+ON cli.idcli = c.idcli 
+GROUP BY cli.nom, cli.prenom;
+#+END_SRC
+
+*** A)
+
+#+BEGIN_SRC sql
+SELECT cli.nom, cli.prenom, count(c.idc)
+FROM clients cli 
+INNER JOIN commandes c 
+ON cli.idcli = c.idcli 
+GROUP BY cli.nom, cli.prenom
+HAVING COUNT(c.idc) > 1;
+#+END_SRC
+
+** Question 31
+
+#+BEGIN_SRC sql
+SELECT cli.nom, cli.prenom, count(c.idc)
+FROM clients cli 
+INNER JOIN commandes c 
+ON cli.idcli = c.idcli 
+GROUP BY cli.nom, cli.prenom
+HAVING COUNT(c.idc) = ( SELECT MAX(COUNT(c.idc))
+                        FROM Commandes C
+                        GROUP BY c.idc );
+#+END_SRC
+
+** Question 33
+
+#+BEGIN_SRC sql
+SELECT 'La commande ' || idC || ' a ete livree au client ' || cli.nom || ' ' || cli.prenom || ' par ' || liv.nom || ' ' || liv.prenom AS "Details Des Commandes" FROM Clients cli
+INNER JOIN Commandes com
+ON cli.idCli = com.idCli
+INNER JOIN Livreurs liv
+ON liv.idL = com.idL;
+#+END_SRC
+
+-----
+
+
+* TP HR
+
+#+HTML: <img alt="HR schemas" src="https://drive.google.com/uc?id=19kosvCxaQlTxubtrMNU5kCC44H1d14T3" width="70%"/>
+
+** Partie 1
+:PROPERTIES:
+:header-args: :tangle yes
+:END:
+*** Question 1
+
+Afficher la liste des employés qui n'ont pas de commission. Cette liste doit
+être ordonnée selon un ordre descendant de leur nom.
+
+#+begin_src sql :comments org
+  SELECT *
+  FROM EMPLOYEES
+  WHERE COMMISSION_PCT IS NULL;
+#+end_src
+
+*** Question 2
+
+Afficher la liste des employés, leur nom, prénom et salaire. Cette liste doit
+être numérotée pour chaque département et selon un ordre descendant du salaire.
+
+#+begin_src sql :tangle yes :comments org
+  SELECT ROW_NUMBER() OVER(ORDER BY DEPARTMENT_ID),
+	 LAST_NAME,
+	 FIRST_NAME,
+	 SALARY
+  FROM EMPLOYEES
+  ORDER BY SALARY DESC;
+#+end_src
+
+*** Question 3
+
+Afficher le résultat suivant
+
+#+begin_src sql :tangle yes :comments org
+  SELECT LAST_NAME || ' ' || FIRST_NAME AS "Nom et prenom",
+	 DEPARTMENT_ID AS "Numero departement"
+  FROM EMPLOYEES
+  WHERE DEPARTMENT_ID = 30;
+#+end_src
+
+*** Question 4
+
+Afficher la liste des départements comme suit.
+
+#+begin_src sql :tangle yes :comments org
+  SELECT DEPARTMENT_ID AS "ID DEPT",
+	 SUBSTR(DEPARTMENT_NAME, 1, 3) || '.' AS "NOM DEPT",
+	 LOCATION_ID AS "LOCATION"
+  FROM DEPARTMENTS
+  ORDER BY DEPARTMENT_ID;
+#+end_src
+
+*** Question 5
+
+Afficher les noms des employés et un statut d'évaluation tel que si
+l'année d'embauche est 1998 affichez le statut =NEEDS REVIEW= sinon
+affichez =NOT THIS YEAR=, nommez la colonne du statut d'évaluation
+REVIEW.
+
+#+begin_src sql :tangle yes :comments org
+  SELECT LAST_NAME,
+  CASE
+      WHEN EXTRACT(YEAR FROM HIRE_DATE) = '1998' THEN 'NEEDS REVIEW'
+      WHEN EXTRACT(YEAR FROM HIRE_DATE) != '1998' THEN 'NOT THIS YEAR'
+  END AS "REVIEW"
+  FROM EMPLOYEES;
+#+end_src
+
+*** Question 6
+
+#+begin_src sql :tangle yes :comments org
+  SELECT LAST_NAME,
+	 FIRST_NAME,
+	 EXTRACT(YEAR FROM HIRE_DATE) AS "Year",
+	 TO_CHAR(HIRE_DATE, 'Month') AS "Month",
+	 TO_CHAR(HIRE_DATE, 'Q') AS "Quarter"
+  FROM EMPLOYEES
+  ORDER BY EXTRACT(YEAR FROM HIRE_DATE) DESC;
+#+end_src
+
+*** Question 7
+
+Afficher pour chacun des employés du département 30 son ancienneté (nombre total
+de mois travaillés).
+
+#+begin_src sql :tangle yes :comments org
+  SELECT LAST_NAME || ' ' || FIRST_NAME AS "Nom et prenom",
+	 ROUND(MONTHS_BETWEEN(SYSDATE, HIRE_DATE)) AS "Anciennete"
+  FROM EMPLOYEES
+  WHERE DEPARTMENT_ID = 30;
+#+end_src
+
+** Partie 2
+:PROPERTIES:
+:header-args: :tangle yes
+:END:
+*** Question 1
+
+#+begin_src sql :tangle yes :comments org
+  SELECT MAX(salary), MIN(salary)
+  FROM Employees;
+#+end_src
+
+*** Question 2
+
+#+begin_src sql :tangle yes :comments org
+  SELECT D.Department_ID, ROUND(AVG(salary), 2)
+  FROM Employees E
+  INNER JOIN Departments D
+  ON E.Department_ID = D.Department_ID
+  GROUP BY D.Department_ID;
+#+end_src
+
+*** Question 3
+
+#+begin_src sql :tangle yes :comments org
+  SELECT COUNT(Employee_ID)
+  FROM Employees E
+  INNER JOIN Departments D
+  ON E.Department_ID = D.Department_ID
+  GROUP BY D.Department_ID;
+#+end_src
+
+*** Question 4
+
+#+begin_src sql :tangle yes :comments org
+    SELECT D.Department_ID AS "identifiant", COUNT(Employee_ID) AS "nbr des employes"
+    FROM Employees E
+    INNER JOIN Departments D
+    ON E.Department_ID = D.Department_ID
+    GROUP BY D.Department_ID;
+#+end_src
+
+** Partie 3
+:PROPERTIES:
+:header-args: :tangle yes
+:END:
+*** Question 1
+
+#+begin_src sql :tangle yes :comments org
+  SELECT E.FIRST_NAME, E.LAST_NAME, D.DEPARTMENT_NAME
+  FROM EMPLOYEES E
+  INNER JOIN EMPLOYEES D
+  ON E.DEPARTMENT_ID = D.DEPARTMENT_ID;
+#+end_src
+
+*** Question 2
+
+#+begin_src sql :tangle yes :comments org
+  SELECT D.DEPARTMENT_NAME, C.COUNTRY_NAME, R.REGION_NAME
+  FROM DEPARTMENTS D
+  INNER JOIN LOCATIONS L
+  ON L.LOCATION_ID = D.LOCATION_ID
+  INNER JOIN COUNTRIES C
+  ON C.COUNTRY_ID = L.COUNTRY_ID
+  INNER JOIN REGIONS R
+  ON R.REGION_ID = C.REGION_ID;
+#+end_src
+
+*** Question 3
+
+#+begin_src sql :tangle yes :comments org
+  SELECT E.*, J.JOB_TITLE
+  FROM EMPLOYEES E
+  INNER JOIN JOBS J
+  ON J.JOB_ID = E.JOB_ID;
+#+end_src
+
+*** Question 4
+
+#+begin_src sql :tangle yes :comments org
+  SELECT SUM(ROUND(EXTRACT(MONTH FROM HIRE_DATE), 2))
+  FROM EMPLOYEES E
+  INNER JOIN DEPARTMENTS D
+  ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+  GROUP BY D.DEPARTMENT_ID;
+#+end_src
+
+*** Question 5
+
+#+begin_src sql :tangle yes :comments org
+  SELECT E.FIRST_NAME, E.LAST_NAME, M.FIRST_NAME, M.LAST_NAME
+  FROM EMPLOYEES E
+  INNER JOIN EMPLOYEES M
+  ON M.MANAGER_ID = E.EMPLOYEE_ID;
+#+end_src
+
+** Partie 4
+:PROPERTIES:
+:header-args: :tangle yes
+:END:
+*** Question 1
+
+Afficher la liste des départements auxquels aucun employé n'est affecté.
+
+#+begin_src sql :tangle yes :comments org
+  SELECT D.*
+  FROM DEPARTMENTS D
+  EXCEPT
+  SELECT D.*
+  FROM DEPARTMENTS D, EMPLOYEES E
+  WHERE D.DEPARTMENT_ID = E.DEPARTMENT_ID;
+#+end_src
+
+*** Question 2
+
+Afficher les détails des employés dont le salaire est égal au salaire minimum.
+
+#+begin_src sql :tangle yes :comments org
+  SELECT *
+  FROM EMPLOYEES
+  WHERE SALARY = ( SELECT MIN(SALARY) FROM EMPLOYEES );
+#+end_src
+
+*** Question 3
+
+Afficher les détails relatifs aux employés qui ont le même manager que l'employé dont
+l'identifiant est égal à 110.
+
+#+begin_src sql :tangle yes :comments org
+  SELECT *
+  FROM EMPLOYEES
+  WHERE MANAGER_ID = ( SELECT MANAGER_ID FROM EMPLOYEES WHERE EMPLOYEE_ID = 110);
+#+end_src
+
+*** Question 4
+
+Afficher le résultat suivant...
+
+#+NAME: Question 4
+#+begin_src sql :tangle yes :comments org
+  /* This is the closest thing I have gotten to the answer :-( */
+  SELECT COUNT(REGION_ID) AS "Liste", COALESCE(REGION_NAME, 'TOTAL') AS "Region"
+  FROM REGIONS
+  GROUP BY ROLLUP (REGION_NAME);
+#+end_src
+
+*** Question 5
+
+Afficher la liste des employés et respectivement le nom de leur JOB. (En utilisant une
+sous requête)
+
+#+begin_src sql :tangle yes :comments org
+  SELECT E.*, ( SELECT J.JOB_TITLE
+		FROM JOBS J
+		WHERE J.JOB_ID = E.JOB_ID )
+  FROM EMPLOYEES E;
+#+end_src
+
+*** Question 6
+
+Afficher les employés qui touche un salaire supérieur à celui de tous les directeurs
+commerciaux (~job_id='SA_MAN'~)
+
+#+begin_src sql :tangle yes :comments org
+  SELECT *
+  FROM EMPLOYEES E
+  WHERE SALARY > ( SELECT MAX(SALARY)
+		   FROM EMPLOYEES E
+		   INNER JOIN JOBS J
+		   ON J.JOB_ID = E.JOB_ID
+		   WHERE J.JOB_ID = 'SA_MAN' );
+#+end_src
+
+*** Question 7
+
+Afficher la liste des employés qui gagnent moins que le salaire moyen de leur
+département.
+
+#+begin_src sql :tangle yes :comments org
+  SELECT *
+  FROM EMPLOYEES E
+  WHERE SALARY < ( SELECT AVG(SALARY)
+		   FROM EMPLOYEES X
+		   WHERE E.DEPARTMENT_ID = X.DEPARTMENT_ID );
+#+end_src
+
+-----
+
+
+* PL/SQL
+** Blocs Anonymes
+*** Question 1
+
+Calculer et afficher la moyenne des salaires des employés qui travaillent dans les
+départements 20 et 30.
+#+begin_src sql :tangle plsql-anon.sql :comments org
+  DECLARE
+    MOY20 EMPLOYEES.SALARY%TYPE;
+    MOY30 EMPLOYEES.SALARY%TYPE;
+  BEGIN
+    SELECT AVG(salary) INTO MOY20 FROM EMPLOYEES WHERE DEPARTMENT_ID = 20;
+    SELECT AVG(salary) INTO MOY30 FROM EMPLOYEES WHERE DEPARTMENT_ID = 30;
+
+    DBMS_OUTPUT.PUT_LINE('Salaire moyenne du departement 20: ' || TO_CHAR(MOY20, '999.99'));
+    DBMS_OUTPUT.PUT_LINE('Salaire moyenne du departement 30: ' || TO_CHAR(MOY30, '999.99'));
+  END;
+  /
+#+end_src
+
+*** Question 2
+
+Afficher les détails du manager de l'employé 101.
+#+begin_src sql :tangle plsql-anon.sql :comments org
+  DECLARE
+    MANAGER EMPLOYEES%ROWTYPE;
+  BEGIN
+    SELECT * 
+    INTO MANAGER
+    FROM EMPLOYEES 
+    WHERE EMPLOYEE_ID = (SELECT MANAGER_ID 
+		   FROM EMPLOYEES 
+		   WHERE EMPLOYEE_ID = 101);
+
+    DBMS_OUTPUT.PUT_LINE(MANAGER.FIRST_NAME || ' ' || MANAGER.LAST_NAME);
+  END;
+  /
+#+end_src
+
+*** Question 3
+
+Echanger les salaires des employés 120 et 122.
+#+begin_src sql :tangle plsql-anon.sql :comments org
+DECLARE
+  SALARY_120 EMPLOYEES.SALARY%TYPE;
+  SALARY_122 EMPLOYEES.SALARY%TYPE;
+BEGIN
+  SELECT SALARY INTO SALARY_120 FROM EMPLOYEES WHERE EMPLOYEE_ID = 120;
+  SELECT SALARY INTO SALARY_122 FROM EMPLOYEES WHERE EMPLOYEE_ID = 122;
+
+  UPDATE EMPLOYEES SET SALARY = SALARY_120 WHERE EMPLOYEE_ID=122;
+  UPDATE EMPLOYEES SET SALARY = SALARY_122 WHERE EMPLOYEE_ID=120;
+
+  DBMS_OUTPUT.PUT_LINE('Swapped the two salaries');
+END;
+/
+#+end_src
+
+*** Question 4
+
+Augmenter le salaire de l'employé 115 sur la base des conditions suivantes:
+- Si l'expérience est plus de 10 ans, augmenter le salaire de 20%
+- Si l'expérience est supérieure à 5 ans, augmenter le salaire de 10%
+- Sinon l'augmenter seulement de 5%
+#+begin_src sql :tangle plsql-anon.sql :comments org
+DECLARE
+  HIRE_DATE NUMBER;
+  ID INTEGER := 115;
+BEGIN
+  SELECT EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM HIRE_DATE)
+  INTO HIRE_DATE
+  FROM EMPLOYEES
+  WHERE EMPLOYEE_ID = ID;
+
+  CASE
+    WHEN HIRE_DATE > 10
+      THEN UPDATE EMPLOYEES SET SALARY = SALARY + SALARY * 0.2 WHERE EMPLOYEE_ID = ID;
+    WHEN HIRE_DATE > 5
+      THEN UPDATE EMPLOYEES SET SALARY = SALARY + SALARY * 0.1 WHERE EMPLOYEE_ID = ID;
+    ELSE
+      UPDATE EMPLOYEES SET SALARY = SALARY + SALARY * 0.05 WHERE EMPLOYEE_ID = ID;
+  END CASE;
+END;
+/
+#+end_src
+
+*** Question 5
+
+Changer le pourcentage de commission comme suit pour l'employé avec l'ID égale à
+150:
+- Si le salaire est supérieur à 10000, la commission est de 0,4%.
+- Si le salaire est inférieur à 10000, mais l'expérience est de plus de 10 ans, la commission est de 0,35%.
+- Si le salaire est inférieur à 3000 alors la commission est de 0,25%.
+- Dans les cas restants commission est de 0,15%.
+
+#+begin_src sql :tangle plsql-anon.sql :comments org
+DECLARE
+  EMPLOYEE_SALARY EMPLOYEES.SALARY%TYPE;
+  YEARS_SINCE_HIRED NUMBER;
+  ID INTEGER := 150;
+BEGIN
+  SELECT EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM HIRE_DATE)
+  INTO YEARS_SINCE_HIRED
+  FROM EMPLOYEES
+  WHERE EMPLOYEE_ID = ID;
+
+  SELECT SALARY
+  INTO EMPLOYEE_SALARY
+  FROM EMPLOYEES
+  WHERE EMPLOYEE_ID = ID;
+
+  CASE
+    WHEN EMPLOYEE_SALARY > 10000
+      THEN UPDATE EMPLOYEES SET COMMISSION_PCT = 0.4 WHERE EMPLOYEE_ID = ID;
+    WHEN EMPLOYEE_SALARY < 3000
+      THEN UPDATE EMPLOYEES SET COMMISSION_PCT = 0.25 WHERE EMPLOYEE_ID = ID;
+    WHEN EMPLOYEE_SALARY < 10000 AND YEARS_SINCE_HIRED > 10
+      THEN UPDATE EMPLOYEES SET COMMISSION_PCT = 0.35 WHERE EMPLOYEE_ID = ID;
+    ELSE UPDATE EMPLOYEES SET COMMISSION_PCT = 0.15 WHERE EMPLOYEE_ID = ID;
+  END CASE;
+END;
+/
+  #+end_src
+
+
+** TP 1
+:PROPERTIES:
+:header-args: :tangle plsql-pt.1.sql :comments org
+:END:
+
+Gardez à l'esprit les notations suivantes lors de la lecture de cette section:
++ =CUR= désigne un =CURSOR=
++ =REC= désigne un =RECORD=
+
+*** Question 1
+
+Afficher pour chaque département:
++ le nombre de ces employés
++ le salaire le plus faible
++ le salaire moyen
++ le salaire le plus élevé
+
+#+begin_src sql
+  DECLARE
+    CURSOR CUR_NUM_EMP IS
+    SELECT D.DEPARTMENT_ID,
+	   MIN(E.SALARY) AS MIN_SAL,
+	   AVG(E.SALARY) AS AVG_SAL,
+	   MAX(E.SALARY) AS MAX_SAL,
+	   COUNT(D.DEPARTMENT_ID) AS NUM_EMP
+    FROM EMPLOYEES E
+    INNER JOIN DEPARTMENTS D
+    ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+    GROUP BY D.DEPARTMENT_ID;
+  BEGIN
+    -- Fetch and print CUR_NUM_EMP's values.
+    FOR R IN CUR_NUM_EMP
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('Department ('|| R.DEPARTMENT_ID ||'):');
+      DBMS_OUTPUT.PUT_LINE('> Employees: ' || R.NUM_EMP);
+      DBMS_OUTPUT.PUT_LINE('> Minimum Salary: ' || R.MIN_SAL);
+      DBMS_OUTPUT.PUT_LINE('> Average Salary: ' || R.AVG_SAL);
+      DBMS_OUTPUT.PUT_LINE('> Maximum Salary: ' || R.MAX_SAL);
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 2
+
+Afficher les 6 premiers employés ayant les salaires les plus
+élevés. Pour chacun de ces employés, afficher leur nom, leur =JOB_ID=
+ainsi que leur salaire.  Ordonner le résultat de telle sorte que le
+premier employé est celui ayant le salaire le plus élevé.
+#+begin_src sql
+  DECLARE
+  CURSOR CUR_HIGHEST_SAL IS
+    SELECT LAST_NAME, JOB_ID, SALARY
+    FROM EMPLOYEES
+    WHERE SALARY = (SELECT MAX(SALARY) FROM EMPLOYEES)
+    ORDER BY SALARY DESC
+    FETCH FIRST 6 ROWS ONLY;
+  BEGIN
+    FOR R IN CUR_HIGHEST_SAL
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('NOM: ' || R.LAST_NAME);
+      DBMS_OUTPUT.PUT_LINE('JOB_ID: ' || R.JOB_ID);
+      DBMS_OUTPUT.PUT_LINE('SALAIRE: ' || R.SALARY);
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 3
+
+Afficher le cinquième et dixième employé de la table =EMPLOYEES=.
+#+begin_src sql
+  DECLARE
+    CURSOR CUR_EMP IS
+    SELECT ROW_NUMBER() OVER (ORDER BY EMPLOYEE_ID) AS IDX, E.* FROM EMPLOYEES E;
+  BEGIN
+    FOR R IN CUR_EMP
+    LOOP
+      IF R.IDX = 5 OR R.IDX = 10
+	THEN
+	  DBMS_OUTPUT.PUT_LINE('Index: ' || R.IDX);
+	  DBMS_OUTPUT.PUT_LINE('> ID: ' || R.EMPLOYEE_ID);
+	  DBMS_OUTPUT.PUT_LINE('> First Name: ' || R.FIRST_NAME);
+	  DBMS_OUTPUT.PUT_LINE('> Last Name: ' || R.LAST_NAME);
+      END IF;
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** TODO Question 4
+
+Afficher un état de tous les pays et les villes correspondantes pour tous les
+départements. Pour ce faire utiliser les tables =COUNTRIES= et =LOCATIONS=.
+Dans un premier curseur, afficher à partir de la table =COUNTRIES=, le pays ainsi que
+son =ID=. Dans un deuxième curseur paramétré, extraire le(les) ville(s) et le(les)
+=STATE_PROVINCE= relatif à chaque pays.
+Trier les villes par ordre croissant de leur =ID= et les villes par ordre croissant de leur
+nom.
+#+begin_src sql
+  DECLARE
+    -- Get countries and their respective ID.
+    CURSOR CUR_COUNTRIES IS
+    SELECT C.COUNTRY_NAME, C.COUNTRY_ID
+    FROM COUNTRIES C;
+
+    -- Get the city and state province of 
+    -- a particular record in CUR_COUNTRIES.
+    CURSOR CUR_CITIES (REC CUR_COUNTRIES%ROWTYPE) IS
+    SELECT L.CITY, L.STATE_PROVINCE
+    FROM LOCATIONS L, COUNTRIES C
+    WHERE C.COUNTRY_ID = L.COUNTRY_ID
+    ORDER BY L.CITY;
+  BEGIN
+    -- The question is unclear as to what should be accomplished.
+  END;
+  /
+#+end_src
+
+*** Question 5
+
+Ecrivez un bloc PL/SQL qui déclare et utilise des curseurs avec des paramètres. Dans
+une boucle, utilisez un curseur pour extraire et afficher, à partir de la table
+departments, le numéro et le nom de tous les départements pour lesquels la valeur
+=DEPARTMENT_ID= est inférieure à 100.
+
+Transmettez le numéro du département à un autre curseur en tant que paramètre pour
+extraire de la table employees les informations (nom de famille, poste, date
+d'embauche et salaire) concernant les employés travaillant dans ce département et dont
+la valeur =EMPLOYEE_ID= est inférieure à 120.
+#+begin_src sql
+  DECLARE
+    -- Extract deparments whose ID is less than 100
+    CURSOR CUR_DEPT IS
+    SELECT DEPARTMENT_ID, DEPARTMENT_NAME
+    FROM DEPARTMENTS
+    WHERE DEPARTMENT_ID < 100;
+
+    -- Extract employees whose ID is fewer
+    -- than 120, who also work in departments
+    -- returned by CUR_DEPTS.
+    CURSOR CUR_EMP (REC CUR_DEPT%ROWTYPE) IS
+    SELECT E.LAST_NAME, J.JOB_TITLE, E.HIRE_DATE, E.SALARY
+    FROM EMPLOYEES E
+    INNER JOIN JOBS J
+    ON J.JOB_ID = E.JOB_ID
+    WHERE E.DEPARTMENT_ID = REC.DEPARTMENT_ID AND E.EMPLOYEE_ID < 120;
+  BEGIN
+    FOR REC_D IN CUR_DEPT
+    LOOP
+       FOR REC_E IN CUR_EMP (REC_D)
+       LOOP
+	 DBMS_OUTPUT.PUT_LINE('Last name: '|| REC_E.LAST_NAME);
+	 DBMS_OUTPUT.PUT_LINE('Position: ' || REC_E.JOB_TITLE);
+	 DBMS_OUTPUT.PUT_LINE('Hire Date: ' || REC_E.HIRE_DATE);
+	 DBMS_OUTPUT.PUT_LINE('Salary: ' || REC_E.SALARY);
+       END LOOP;
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 6
+
+Afficher l'année où un nombre maximal d'employés a été embauché en précisant le
+nombre de personnes embauchées chaque mois de cette année.
+#+begin_src sql
+  DECLARE
+    YEAR_MAX_EMPLOYMENTS NUMBER;
+
+    -- Get the number of people hired in each month for a given year (YYYY).
+    CURSOR CUR_EMP_PER_MONTH (YYYY NUMBER) IS
+    SELECT EXTRACT(MONTH FROM HIRE_DATE) AS MM, COUNT(EMPLOYEE_ID) AS EMPS
+    FROM EMPLOYEES
+    WHERE EXTRACT(YEAR FROM HIRE_DATE) = YYYY
+    GROUP BY EXTRACT(MONTH FROM HIRE_DATE) ORDER BY EXTRACT(MONTH FROM HIRE_DATE);
+  BEGIN
+    -- Get the year when a maximum number of employees were hired.
+    SELECT EXTRACT(YEAR FROM HIRE_DATE)
+    INTO YEAR_MAX_EMPLOYMENTS
+    FROM EMPLOYEES
+    GROUP BY EXTRACT(YEAR FROM HIRE_DATE)
+    HAVING COUNT(EMPLOYEE_ID) = (
+    SELECT MAX(COUNT(EMPLOYEE_ID))
+    FROM EMPLOYEES
+    GROUP BY EXTRACT(YEAR FROM HIRE_DATE));
+
+    DBMS_OUTPUT.PUT_LINE('Year of maximum employments: ' || YEAR_MAX_EMPLOYMENTS);
+
+    FOR R IN CUR_EMP_PER_MONTH (YEAR_MAX_EMPLOYMENTS)
+      LOOP
+	 DBMS_OUTPUT.PUT_LINE(TO_CHAR(TO_DATE(R.MM, 'MM'), 'Month'));
+	 DBMS_OUTPUT.PUT_LINE('> People hired: ' || R.EMPS);
+      END LOOP;
+  END;
+  /
+#+end_src
+
+
+** TP 2
+:PROPERTIES:
+:header-args: :tangle plsql-pt.2.sql :comments org
+:END:
+
+*** Question 1
+
+Ecrire une fonction stockée =FN_NBREDEPARTEMENT= permettant de retourner le
+nombre total des départements.
+#+begin_src sql
+  CREATE OR REPLACE FUNCTION FN_NBREDEPARTEMENT
+  RETURN NUMBER
+  IS
+    TOTAL_DEPTS NUMBER := 0;
+  BEGIN
+    SELECT COUNT(*) INTO TOTAL_DEPTS FROM DEPARTMENTS;
+
+    RETURN TOTAL_DEPTS;
+  END;
+  /
+#+end_src
+
+*** Question 2
+
+Ecrire une fonction stockée =FN_NOMDEPT= qui prend en paramètre l'id de
+l'employé et qui retourne le nom du département auquel il est associé.
+#+begin_src sql
+  CREATE OR REPLACE FUNCTION FN_NOMDEPT (EMP_ID IN EMPLOYEES.EMPLOYEE_ID%TYPE)
+  RETURN DEPARTMENTS.DEPARTMENT_NAME%TYPE
+  IS
+    DEPT_NAME DEPARTMENTS.DEPARTMENT_NAME%TYPE;
+  BEGIN
+    SELECT D.DEPARTMENT_NAME
+    INTO DEPT_NAME
+    FROM EMPLOYEES E
+    INNER JOIN DEPARTMENTS D
+    ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+    WHERE E.EMPLOYEE_ID = EMP_ID;
+
+    RETURN DEPT_NAME;
+  END;
+  /
+#+end_src
+
+*** Question 3
+
+Ecrire une fonction stockée =FN_SALAIRE= qui retourne le salaire d'un employé
+dont l'identifiant est donné en paramètre d'entrée.
+#+begin_src sql
+  CREATE OR REPLACE FUNCTION FN_SALAIRE (EMP_ID IN EMPLOYEES.EMPLOYEE_ID%TYPE)
+  RETURN EMPLOYEES.SALARY%TYPE
+  IS
+    SAL EMPLOYEES.SALARY%TYPE;
+  BEGIN
+    SELECT SALARY
+    INTO SAL
+    FROM EMPLOYEES E
+    WHERE E.EMPLOYEE_ID = EMP_ID;
+
+    RETURN SAL;
+  END;
+  /
+#+end_src
+
+*** Question 4
+
+Ecrire une fonction stockée =FN_NBR_SALARIE= qui prend en paramètre le numéro
+d'un département et retourne le nombre de ces salariés.
+#+begin_src sql
+CREATE OR REPLACE FUNCTION FN_NBR_SALARIE( DEPT_ID IN DEPARTMENTS.DEPARTMENT_ID%TYPE)
+RETURN
+  DEPARTMENTS.DEPARTMENT_ID%TYPE
+IS
+  TOTAL_EMPS NUMBER;
+BEGIN
+  SELECT COUNT(*)
+  INTO TOTAL_EMPS
+  FROM EMPLOYEES
+  GROUP BY DEPARTMENT_ID
+  HAVING DEPARTMENT_ID = DEPT_ID;
+
+  RETURN TOTAL_EMPS;
+END;
+/ 
+#+end_src
+
+Traduire cette fonction en une procédure stockée =PROC_NBR_SALARIE=:
+#+begin_src sql
+CREATE OR REPLACE PROCEDURE PROC_NBR_SALARIE( DEPT_ID IN DEPARTMENTS.DEPARTMENT_ID%TYPE, EMPS OUT NUMBER)
+IS
+BEGIN
+  SELECT COUNT(*)
+  INTO EMPS
+  FROM EMPLOYEES
+  GROUP BY DEPARTMENT_ID
+  HAVING DEPARTMENT_ID = DEPT_ID;
+END;
+/ 
+#+end_src
+
+*** Question 5
+
+Ecrire une procédure stockée =PROC_TEST_NBR_SALARIE= qui permet d'afficher les
+noms des départements dont le nombre des salariés est supérieur à 40.
+#+begin_src sql
+  CREATE OR REPLACE PROCEDURE PROC_TEST_NBR_SALARIE
+  IS
+    CURSOR CUR_DEPS IS
+    SELECT D.DEPARTMENT_NAME FROM EMPLOYEES E
+    INNER JOIN DEPARTMENTS D
+    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+    GROUP BY D.DEPARTMENT_ID, D.DEPARTMENT_NAME
+    HAVING COUNT(E.EMPLOYEE_ID) > 40;
+  BEGIN
+    FOR REC IN CUR_DEPS
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('Department: ' || REC.DEPARTMENT_NAME);
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 6
+
+Ecrire une procédure stockée =PROC_ANNEE_DEMBAUCHE= permettant d'afficher
+les années au cours desquelles plus de 10 salariés ont été embauché.
+#+begin_src sql
+  CREATE OR REPLACE PROCEDURE PROC_ANNEE_DEMBAUCHE
+  IS
+    CURSOR CUR_YEARS IS
+    SELECT EXTRACT(YEAR FROM HIRE_DATE) AS YYYY
+    FROM EMPLOYEES
+    GROUP BY EXTRACT(YEAR FROM HIRE_DATE)
+    HAVING COUNT(EMPLOYEE_ID) > 10;
+  BEGIN
+    FOR REC IN CUR_YEARS
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('Year: ' || REC.YYYY);
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 7
+
+Ecrire une procédure stockée =PROC_JOBHISTORY= permettant d'afficher
+la liste des employés qui ont changé de poste au minimum une fois.
+#+begin_src sql
+  CREATE OR REPLACE PROCEDURE PROC_JOBHISTORY
+  IS
+    CURSOR CUR_EMPS IS
+    SELECT E.EMPLOYEE_ID, E.FIRST_NAME, E.LAST_NAME
+    FROM EMPLOYEES E
+    INNER JOIN JOB_HISTORY J
+    ON J.EMPLOYEE_ID = E.EMPLOYEE_ID
+    GROUP BY E.EMPLOYEE_ID, E.FIRST_NAME, E.LAST_NAME
+    HAVING COUNT(*) > 1;
+  BEGIN
+    FOR REC IN CUR_EMPS
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('Employee ID: ' || REC.EMPLOYEE_ID);
+      DBMS_OUTPUT.PUT_LINE('> First Name: ' || REC.FIRST_NAME);
+      DBMS_OUTPUT.PUT_LINE('> Last Name: ' || REC.LAST_NAME);
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 8
+
+Ecrire une procédure stockée =PROC_LISTE_DES_EMP= permettant
+d'afficher la liste de tous employés.
+#+begin_src sql
+  CREATE OR REPLACE PROCEDURE PROC_LISTE_DES_EMP
+  IS
+    CURSOR CUR_EMPS IS
+    SELECT * FROM EMPLOYEES;
+  BEGIN
+    FOR REC IN CUR_EMPS
+    LOOP
+      DBMS_OUTPUT.PUT_LINE(CHR(10) || 'ID: ' || REC.EMPLOYEE_ID);
+      DBMS_OUTPUT.PUT_LINE('First Name: ' || REC.FIRST_NAME);
+      DBMS_OUTPUT.PUT_LINE('Last Name: ' || REC.LAST_NAME);
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 9
+
+Ecrire une procédure stockée =PROC_LISTE_EMP_DEPT= permettant d'afficher pour
+chaque département la liste de ces employés. Afficher leur nom et
+prénom.
+#+begin_src sql
+  CREATE OR REPLACE PROCEDURE PROC_LISTE_EMP_DEPT
+  IS
+    CURSOR CUR_DEPS IS
+    SELECT DEPARTMENT_ID FROM DEPARTMENTS;
+
+    CURSOR CUR_EMPS (REC CUR_DEPS%ROWTYPE) IS
+    SELECT FIRST_NAME, LAST_NAME FROM EMPLOYEES WHERE DEPARTMENT_ID = REC.DEPARTMENT_ID;
+  BEGIN
+    FOR DEP IN CUR_DEPS
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('--------------');
+      DBMS_OUTPUT.PUT_LINE('Department: ' || DEP.DEPARTMENT_ID);
+
+      FOR EMP IN CUR_EMPS (DEP)
+      LOOP
+	DBMS_OUTPUT.PUT_LINE(CHR(10) || '> Last Name: ' || EMP.LAST_NAME);
+	DBMS_OUTPUT.PUT_LINE('> First Name: ' || EMP.FIRST_NAME);
+      END LOOP;
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 10
+
+Ecrire une procédure stockée =PROC_LISTE_EMP= permettant d'afficher la
+liste des employés dirigés par le manager dont l'identifiant est donné
+comme paramètre d'entrée. Affichez leurs noms et prénoms et leurs
+salaires.
+#+begin_src sql
+  CREATE OR REPLACE PROCEDURE PROC_LISTE_EMP ( MGR_ID IN EMPLOYEES.MANAGER_ID%TYPE )
+  IS
+    CURSOR CUR_EMPS IS
+    SELECT LAST_NAME, FIRST_NAME, SALARY FROM EMPLOYEES
+    WHERE MANAGER_ID = MGR_ID;
+  BEGIN
+    FOR REC IN CUR_EMPS
+    LOOP
+      DBMS_OUTPUT.PUT_LINE(CHR(10) || 'Last Name: ' || REC.LAST_NAME);
+      DBMS_OUTPUT.PUT_LINE('First Name: ' || REC.FIRST_NAME);
+      DBMS_OUTPUT.PUT_LINE('Salary: ' || REC.SALARY);
+    END LOOP;
+  END;
+  /
+#+end_src
+
+*** Question 11
+
+Ecrire une fonction stockée =FN_MOY_SALAIRE= qui retourne le salaire
+moyen du département auquel appartient l'employé dont l'identifiant
+est donné comme paramètre d'entrée.
+#+begin_src sql
+  CREATE OR REPLACE FUNCTION FN_MOY_SALAIRE (ID IN EMPLOYEES.EMPLOYEE_ID%TYPE)
+  RETURN
+    EMPLOYEES.SALARY%TYPE
+  IS
+    AVERAGE EMPLOYEES.SALARY%TYPE;
+  BEGIN
+    SELECT AVG(SALARY) INTO AVERAGE
+    FROM EMPLOYEES
+    GROUP BY DEPARTMENT_ID
+    HAVING DEPARTMENT_ID = (
+      SELECT D.DEPARTMENT_ID
+      FROM DEPARTMENTS D
+      INNER JOIN EMPLOYEES E
+      ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+      WHERE E.EMPLOYEE_ID = ID
+    );
+
+    RETURN AVERAGE;
+  END;
+  /
+#+end_src
+
+*** Question 12
+
+Ecrire une procédure stockée =PROC_SAL_SUP= qui permet d'afficher la
+liste des employés qui ont un salaire supérieur à celui dont
+l'identifiant est donné en paramètre.
+
+Utilisez cette procédure pour afficher ceux qui ont un salaire
+supérieur à l'employé 121.
+#+begin_src sql
+  CREATE OR REPLACE PROCEDURE PROC_SAL_SUP (ID IN EMPLOYEES.EMPLOYEE_ID%TYPE)
+  IS
+    CURSOR CUR_EMPS IS
+    SELECT *
+    FROM EMPLOYEES
+    WHERE SALARY > ( SELECT SALARY
+    FROM EMPLOYEES
+    WHERE EMPLOYEE_ID = ID);
+  BEGIN
+    FOR REC IN CUR_EMPS
+    LOOP
+      DBMS_OUTPUT.PUT_LINE(CHR(10) || 'ID: ' || REC.EMPLOYEE_ID);
+      DBMS_OUTPUT.PUT_LINE('First Name: ' || REC.FIRST_NAME);
+      DBMS_OUTPUT.PUT_LINE('Last Name: ' || REC.LAST_NAME);
+      DBMS_OUTPUT.PUT_LINE('Salary: ' || REC.SALARY);
+    END LOOP;
+  END;
+  /
+#+end_src
+
+
+** TP 3
+:PROPERTIES:
+:header-args: :tangle plsql-pt.3.sql :comments org
+:END:
+
+Resources:
+- [[https://docs.oracle.com/javadb/10.6.2.1/ref/rrefsqlj43125.html][CREATE TRIGGER statement]].
+- [[https://docs.oracle.com/cd/B10501_01/appdev.920/a96624/07_errs.htm][Handling PL/SQL Errors]]. 
+
+*** Question 1
+
+Afficher avant et après chaque insertion dans la table EMPLOYEES
+respectivement les messages suivants: "Début d'insertion" et "Fin
+d'insertion".
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_PRINT_BEFORE
+BEFORE INSERT ON EMPLOYEES
+FOR EACH ROW
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Début d''insertion');
+END;
+/
+#+end_src
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_PRINT_AFTER
+AFTER INSERT ON EMPLOYEES
+FOR EACH ROW
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Fin d''insertion');
+END;
+/
+#+end_src
+
+*** Question 2
+
+Ecrire un trigger qui permet de vérifier si le salaire modifié dans la
+table =EMPLOYEES= doit être supérieur à l'ancien salaire.
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_CHECK_SALARY
+AFTER UPDATE OF SALARY ON EMPLOYEES
+FOR EACH ROW
+BEGIN
+  IF (:NEW.SALARY < :OLD.SALARY) THEN
+    RAISE_APPLICATION_ERROR(-20100, 'New salary is less than the old one.');
+  END IF;
+END;
+/
+#+end_src
+
+*** Question 3
+
+Afficher avant chaque insertion, mise à jour ou suppression dans la
+table =DEPARTMENTS= respectivement les messages suivants : "Insertion",
+"Modification" ou "Suppression".
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER DEP_NOTIFY
+BEFORE UPDATE OR DELETE OR INSERT
+ON DEPARTMENTS
+FOR EACH ROW
+BEGIN
+  IF INSERTING THEN
+    DBMS_OUTPUT.PUT_LINE('Insertion');
+  ELSIF UPDATING THEN
+    DBMS_OUTPUT.PUT_LINE('Modification');
+  ELSIF DELETING THEN
+    DBMS_OUTPUT.PUT_LINE('Suppression');
+  END IF;
+END;
+/
+#+end_src
+
+*** Question 4
+
+Créer un trigger qui permet d'insérer les mises à jour de la table
+=EMPLOYEES= (insert delete update) dans une table historique.
+
+Utiliser ce script pour créer la table =HISTORIQUE=:
+
+#+begin_src sql
+CREATE TABLE HISTORIQUE (
+  INSTRUCTION VARCHAR(20),
+  INSERT_DATE DATE,
+  ID_EMPLOYEE NUMBER
+);
+#+end_src
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_HISTORY
+AFTER INSERT OR DELETE OR UPDATE
+ON EMPLOYEES
+FOR EACH ROW
+BEGIN
+  IF INSERTING THEN
+    INSERT INTO HISTORIQUE VALUES('Insertion', SYSDATE, :NEW.EMPLOYEE_ID);
+  ELSIF UPDATING THEN
+    INSERT INTO HISTORIQUE VALUES('Modification', SYSDATE, :NEW.EMPLOYEE_ID);
+  ELSIF DELETING THEN
+    -- Use the old value otherwise the EMPLOYEE_ID will not show up in the logging table.
+    INSERT INTO HISTORIQUE VALUES('Suppression', SYSDATE, :OLD.EMPLOYEE_ID);
+  END IF;
+END;
+/
+#+end_src
+
+*** Question 5
+
+Vérifier pour chaque nouvelle insertion dans la table EMPLOYEES si le
+=EMPLOYEE_ID= est inférieur à 1000 alors il génère une exception affichant le message
+suivant "Numéro employé inférieur à 1000".
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_VERIFY_ID
+BEFORE INSERT ON EMPLOYEES
+FOR EACH ROW
+BEGIN
+  IF (:NEW.EMPLOYEE_ID < 1000) THEN
+    RAISE_APPLICATION_ERROR(-20100, 'Numéro employé inférieur à 1000.');
+  END IF;
+END;
+/
+#+end_src
+
+*** Question 6
+
+Vérifier avant la mise à jour ou l'insertion dans la table =EMPLOYEES=
+l'existence du numéro de département dans la table =DEPARTMENTS=.
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_VERIFY_DEP
+BEFORE INSERT OR UPDATE ON EMPLOYEES
+FOR EACH ROW
+DECLARE
+  DEP_ID DEPARTMENTS.DEPARTMENT_ID%TYPE;
+BEGIN
+  -- If DEP_ID is returned a null value, the database 
+  -- will raise a NO_DATA_FOUND exception.
+  SELECT DEPARTMENT_ID INTO DEP_ID FROM DEPARTMENTS WHERE DEPARTMENT_ID = :NEW.DEPARTMENT_ID;
+
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('Numéro de department ('|| :NEW.DEPARTMENT_ID ||') n''existe pas.');
+END;
+/
+#+end_src
+
+*** Question 7
+
+Vérifier si les noms et les prénoms ajoutés ou mis à jours dans la
+table =EMPLOYEES= commencent par majuscule ou non.
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_CHECK_INITIALS_CASING
+BEFORE INSERT OR UPDATE ON EMPLOYEES
+FOR EACH ROW
+DECLARE
+  FN_INITIALS VARCHAR2(1);
+  LN_INITIALS VARCHAR2(1);
+  INITIALS_NOT_UPPERCASED EXCEPTION;
+BEGIN
+  -- Extract the initials
+  FN_INITIALS := SUBSTR(:NEW.FIRST_NAME, 0, 1);
+  LN_INITIALS := SUBSTR(:NEW.LAST_NAME, 0, 1);
+
+  -- Verify the casing of the the first name
+  IF (FN_INITIALS <> UPPER(FN_INITIALS)) THEN
+    RAISE INITIALS_NOT_UPPERCASED;
+  END IF;
+
+  -- Verify the casing of the the last name
+  IF (LN_INITIALS <> UPPER(LN_INITIALS)) THEN
+    RAISE INITIALS_NOT_UPPERCASED;
+  END IF;
+
+  EXCEPTION
+    WHEN INITIALS_NOT_UPPERCASED THEN
+      DBMS_OUTPUT.PUT_LINE('Le nom/prénom ne commence pas par une majuscule.');
+END;
+/
+#+end_src
+
+*** Question 8
+
+Ecrire un trigger qui permet de restreindre l'insertion, et la mise à
+jour des données dans la table =EMPLOYEES= pour les jours samedi et
+dimanche.
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_WEEKEND_RESTRICT
+BEFORE INSERT OR UPDATE ON EMPLOYEES
+FOR EACH ROW
+DECLARE
+  WEEKDAY VARCHAR2(20) := TRIM(TO_CHAR(SYSDATE, 'DAY'));
+BEGIN
+  IF (WEEKDAY IN ('SUNDAY','SATURDAY')) THEN
+    RAISE_APPLICATION_ERROR(-20101, 'Vous ne pouvez pas modifier cette table aujourd''hui.');
+  END IF;
+END;
+/
+#+end_src
+
+*** Question 9
+
+Interdire toutes modifications qui peuvent être apportées à la table
+=EMPLOYEES= avant 6 heures du matin et après 23 heures du soir.
+
+#+begin_src sql
+CREATE OR REPLACE TRIGGER EMP_VERIFY_TIME
+BEFORE INSERT OR UPDATE ON EMPLOYEES
+FOR EACH ROW
+DECLARE
+  THIS_HOUR SMALLINT := TO_CHAR(SYSDATE, 'HH');
+BEGIN
+  IF (THIS_HOUR < 6 OR THIS_HOUR > 23) THEN
+    RAISE_APPLICATION_ERROR(-20101, 'Vous ne pouvez pas modifier cette table maintenant.');
+  END IF;
+END;
+/
+#+end_src

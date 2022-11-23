@@ -1,2 +1,0 @@
-#+HTML_HEAD: <link rel="stylesheet" href="/stylesheets/main.css">
-#+HTML_HEAD: <link rel="icon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/103789781">

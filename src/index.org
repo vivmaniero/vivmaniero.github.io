@@ -1,0 +1,7 @@
+#+TITLE: Greetings
+
+[[https://github.com/vivmaniero][vivmaniero]] is a sandbox for independently-written tools and
+documentation, we create [[https://en.wikipedia.org/wiki/Free_software][libre software]] with the goal of benefiting
+the ESPRIT ecosystem.
+
+[[file:docs/theindex.org][Go to the index]] to browse the different documents in this website.

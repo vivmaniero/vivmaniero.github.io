@@ -1,8 +1,0 @@
-* Todos
-* Discussions
-** Submodules vs. Independence
-vm.grtcdr.tn as of this moment employs a very independent
-architecture, sub-projects (vm.grtcdr.tn/dork and vm.grtcdr.tn/dbms3)
-implement their own project specification (publish.el) and build
-system (Makefile), this is helpful if these project expand beyond
-their trivial structure, but is currently overkill.
