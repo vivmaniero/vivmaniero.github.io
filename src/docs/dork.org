@@ -1,0 +1,112 @@
+#+TITLE: Grade calculator for ESPRIT students
+#+INDEX: Emacs Lisp!Dork
+
+This fragile Org table formula calculates the total average of every
+course you provide.
+
+#+BEGIN_SRC org
+#+TBLFM: $6 = if("$3" != "nan", if("$4" != "nan", 0.3*$3+0.2*$4+0.5*$5, 0.4*$3+0.6*$5), if("$4" == "nan", $5, 0.3*$4+0.7*$5));E::@>$2=vsum(@I..II)::$7=$2*$6::@>$7=vsum(@I..II)::@>$8=@>$7/@>$2
+#+END_SRC
+
+Create an empty table like so:
+
+#+BEGIN_SRC org
+| MATIERE | COEFF | CC | TP | EX | AVG | AVG * COEFF | TOTAL |
+|---------+-------+----+----+----+-----+-------------+-------|
+|         |       |    |    |    |     |             |       |
+#+END_SRC
+
+We will now proceed by populating the table with the data needed to
+perform the grade calculation.
+
+#+BEGIN_SRC org 
+| MATIERE            | COEFF | CC | TP |   EX | AVG | AVG * COEFF | TOTAL |
+|--------------------+-------+----+----+------+-----+-------------+-------|
+| Numerical Analysis |     4 | 12 |    | 13.5 |     |             |       |
+#+END_SRC
+
+The course I've decided to use an example, only has two criteria
+through which the grade of the course is calculated, ~CC~, and ~EX~.
+
+If a cell is empty, e.g. ~TP~, it means that the course doesn't take
+that criterion into account, the percentages used in the calculation
+will therefore be adjusted.
+
+Now that we've successfully represented our data in a table that Org
+can fully understand, it's time that we add our table formula,
+i.e. ~TBLFM~.
+
+Table formulas must be placed underneath tables on which you intend to
+apply your formula.
+
+#+BEGIN_SRC org
+| MATIERE            | COEFF | CC | TP |   EX | AVG | AVG * COEFF | TOTAL |
+|--------------------+-------+----+----+------+-----+-------------+-------|
+| Numerical Analysis |     4 | 12 |    | 13.5 |     |             |       |
+#+TBLFM: $6 = if("$3" != "nan", if("$4" != "nan", 0.3*$3+0.2*$4+0.5*$5, 0.4*$3+0.6*$5), if("$4" == "nan", $5, 0.3*$4+0.7*$5));E::@>$2=vsum(@I..II)::$7=$2*$6::@>$7=vsum(@I..II)::@>$8=@>$7/@>$2
+#+END_SRC
+
+Place your cursor on the line containing ~TBLFM~, and hit =C-c C-c=,
+this will evaluate the formula and overwrite the table. You should see
+~12.9~ appear in the ~AVG~ column -- the remaining columns, except for
+~TP~, should be have been automatically assigned ~0~.
+
+#+BEGIN_SRC org
+| MATIERE            | COEFF | CC | TP |   EX |  AVG | AVG * COEFF | TOTAL |
+|--------------------+-------+----+----+------+------+-------------+-------|
+| Numerical Analysis |     4 | 12 |    | 13.5 | 12.9 |           0 |     0 |
+#+TBLFM: $6 = if("$3" != "nan", if("$4" != "nan", 0.3*$3+0.2*$4+0.5*$5, 0.4*$3+0.6*$5), if("$4" == "nan", $5, 0.3*$4+0.7*$5));E::@>$2=vsum(@I..II)::$7=$2*$6::@>$7=vsum(@I..II)::@>$8=@>$7/@>$2
+#+END_SRC
+
+Okay, we managed to calculate the average of a single course, let's
+move on to a more sophisticated example, one which covers the use case
+of calculating the average of multiple - or an entire semester's worth
+of courses.
+
+The table we've been using all along should now be slightly modified
+to answer this use case -- We previously delimited the table's headers
+from the table's data, we will now do the same, but to add a delimiter
+for a row which holds the average of every course, combined, i.e. the
+~TOTAL~.
+
+#+BEGIN_SRC org
+| MATIERE            | COEFF | CC | TP |   EX |  AVG | AVG * COEFF | TOTAL |
+|--------------------+-------+----+----+------+------+-------------+-------|
+| Numerical Analysis |     4 | 12 |    | 13.5 | 12.9 |           0 |     0 |
+|--------------------+-------+----+----+------+------+-------------+-------|
+| TOTAL              |       |    |    |      |      |             |       |
+#+TBLFM: $6 = if("$3" != "nan", if("$4" != "nan", 0.3*$3+0.2*$4+0.5*$5, 0.4*$3+0.6*$5), if("$4" == "nan", $5, 0.3*$4+0.7*$5));E::@>$2=vsum(@I..II)::$7=$2*$6::@>$7=vsum(@I..II)::@>$8=@>$7/@>$2
+#+END_SRC
+
+As usual, to run the calculations, place your point on the ~TBLFM~
+line and run =C-c C-c=, here's what you should see.
+
+#+BEGIN_SRC org
+| MATIERE            | COEFF | CC | TP |   EX |  AVG | AVG * COEFF | TOTAL |
+|--------------------+-------+----+----+------+------+-------------+-------|
+| Numerical Analysis |     4 | 12 |    | 13.5 | 12.9 |        51.6 |     0 |
+|--------------------+-------+----+----+------+------+-------------+-------|
+| TOTAL              |     4 |    |    |      |  nan |        51.6 |  12.9 |
+#+TBLFM: $6 = if("$3" != "nan", if("$4" != "nan", 0.3*$3+0.2*$4+0.5*$5, 0.4*$3+0.6*$5), if("$4" == "nan", $5, 0.3*$4+0.7*$5));E::@>$2=vsum(@I..II)::$7=$2*$6::@>$7=vsum(@I..II)::@>$8=@>$7/@>$2
+#+END_SRC
+
+Interesting, but this reiterates the same information we previously
+obtained, let's add more courses and observe how the data mutates.
+
+#+BEGIN_SRC org
+| MATIERE                     | COEFF |    CC |    TP |   EX |    AVG | AVG * COEFF |   TOTAL |
+|-----------------------------+-------+-------+-------+------+--------+-------------+---------|
+| Numerical Analysis          |     4 |    12 |       | 13.5 |   12.9 |        51.6 |       0 |
+| Web Technologies            |     3 |       |       |   16 |     16 |          48 |         |
+| Object Oriented Programming |     3 | 13.25 | 11.75 |   15 | 13.825 |      41.475 |         |
+|-----------------------------+-------+-------+-------+------+--------+-------------+---------|
+| TOTAL                       |    10 |       |       |      |    nan |     141.075 | 14.1075 |
+#+TBLFM: $6 = if("$3" != "nan", if("$4" != "nan", 0.3*$3+0.2*$4+0.5*$5, 0.4*$3+0.6*$5), if("$4" == "nan", $5, 0.3*$4+0.7*$5));E::@>$2=vsum(@I..II)::$7=$2*$6::@>$7=vsum(@I..II)::@>$8=@>$7/@>$2
+#+END_SRC
+
+Keep in mind, the only columns we need to populate are ~MATIERE~,
+~COEFF~, ~CC~, ~TP~ and ~EX~ -- Everything else is automated.
+
+You should preferably create two tables, one for every semester. When
+you come to know the grade of every course, you may create a single
+table out of them.
