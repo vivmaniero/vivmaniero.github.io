@@ -89,6 +89,7 @@
 	       :base-directory "src/presentations"
 	       :publishing-directory "public/p"
 	       :publishing-function 'org-reveal-publish-to-reveal
+	       :recursive t
 	       :with-toc t
 	       :with-title t
 	       :html-doctype "html5"

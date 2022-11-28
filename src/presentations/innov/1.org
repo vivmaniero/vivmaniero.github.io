@@ -14,8 +14,7 @@ groupe d'universitaires qui cherchent à rendre le monde de
 l'entreprise beaucoup plus tolérable.
 
 #+ATTR_REVEAL: :frag (appear)
-#+ATTR_HTML: :width 320px
-#+HTML: <img src="https://drive.google.com/uc?id=1hkpqrrbo3EC4WZ434JExYuoXscQbJxuS">
+#+HTML: <img src="https://drive.google.com/uc?id=1hkpqrrbo3EC4WZ434JExYuoXscQbJxuS" height="320">
 
 * Quel est notre problème?
 :PROPERTIES:

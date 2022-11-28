@@ -1,36 +1,37 @@
 #+TITLE: Analyse de nos stratégies de marketing
 #+OPTIONS: timestamp:nil num:t toc:nil author:nil
 #+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
-#+REVEAL_THEME: sky
+#+REVEAL_THEME: black
 
 * Introduction
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
 
-Il y a des façons plus techniques de dire cela, mais... nous sommes un
-groupe d'universitaires qui cherchent à rendre le monde de
-l'entreprise beaucoup plus tolérable.
-
-#+ATTR_REVEAL: :frag (appear)
-#+ATTR_HTML: :width 320px
-#+HTML: <img src="/assets/intro--greetings.webp">
+Nous sommes un groupe d'étudiants qui cherchent à rendre le monde de
+l'entreprise beaucoup plus tolérable à travers un analyseur de
+performance qui priorise la santé mentale de vos employés.
 
 * Quel est notre problème?
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
 
-Nous avons remarqué une tendance, les entreprises cherchent la
-productivité totale et maximale, mais elles ne peuvent y parvenir sans
-un bon work-life balance, un environnement de travail agréable.
+Nous avons remarqué une tendance, les entreprises cherchent a
+optimiser et maximiser la productivité de leurs employés, mais elles
+ne peuvent y parvenir sans:
+#+ATTR_REVEAL: :frag (frag)
+- un bon work-life balance
+- un environnement de travail agréable
+- une analyse intelligente et approfondie sur la performance de vos
+  employés et la croissance de votre entreprise
 
 * Ce qui existe déjà
 :PROPERTIES:
 :UNNUMBERED: t
 :END:
 
-Voyons les plus grands solutions dans le marché 🤸
+Voyons les plus grands solutions dans le marché 👀
 
 #+ATTR_REVEAL: :frag (frag)
 ** [[https://www.peoplegoal.com/][PeopleGoal]]
