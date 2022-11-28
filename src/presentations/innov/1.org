@@ -10,11 +10,11 @@
 :END:
 
 Il y a des façons plus techniques de dire cela, mais... nous sommes un
-groupe d'universitaires qui cherchent à rendre le monde de
+groupe d'étudiants qui cherchent à rendre le monde de
 l'entreprise beaucoup plus tolérable.
 
 #+ATTR_REVEAL: :frag (appear)
-#+HTML: <img src="https://drive.google.com/uc?id=1hkpqrrbo3EC4WZ434JExYuoXscQbJxuS" height="320">
+#+HTML: <img src="/assets/innovation--intro-greetings.webp" height="320">
 
 * Quel est notre problème?
 :PROPERTIES:
@@ -137,7 +137,7 @@ On coche toutes les cases!
 :END:
 
 #+ATTR_HTML: :width 80%
-#+HTML: <img src="https://drive.google.com/uc?id=1DpR0xwi33IOcWAYDujtTGvRroQOGlKsF" class="stretch">
+#+HTML: <img src="/assets/innovation--bmc.webp" class="stretch">
 
 * Etude technique
 :PROPERTIES:
@@ -170,20 +170,20 @@ On coche toutes les cases!
 
 ** Page d'authentification
 
-#+HTML: <img src="https://drive.google.com/uc?id=1TGSVZVG0Tb8z2OrBjsfrg6cZmOID1mlr" class="stretch">
+#+HTML: <img src="/assets/innovation--mockups-login.webp" class="stretch">
 
 ** Statistiques
 
-#+HTML: <img src="https://drive.google.com/uc?id=1Kbom4gbF3y86It78QdwTQC86eFxO9bRf" class="stretch">
+#+HTML: <img src="/assets/innovation--mockups-stats.webp" class="stretch">
 
 ** Dashboard
 
-#+HTML: <img src="https://drive.google.com/uc?id=1w_D09lXHmIW9C-nEjVSDcJkDGr-YP7SQ" class="stretch">
+#+HTML: <img src="/assets/innovation--mockups-dashboard.webp" class="stretch">
 
 ** Dashboard (vue en détail)
 
-#+HTML: <img src="https://drive.google.com/uc?id=1Kgjw-KTkQ4oS-M75se3n5G8Q1EfeWFeU" class="stretch">
+#+HTML: <img src="/assets/innovation--mockups-dashboard-details.webp" class="stretch">
 
 ** Quiz
 
-#+HTML: <img src="https://drive.google.com/uc?id=1-qNFvH6f_qa1Z9zai6IUIIdegA8OMNDv" class="stretch">
+#+HTML: <img src="/assets/innovation--mockups-quiz.webp" class="stretch">

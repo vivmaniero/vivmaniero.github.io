@@ -97,5 +97,11 @@
 	       :html-preamble nil
 	       :html-postamble nil
 	       :html-head-include-default-style nil)
+	 (list "assets"
+	       :base-extension "webp\\|png\\|jpe?g"
+	       :base-directory "assets"
+	       :publishing-directory "public/assets"
+	       :publishing-function 'org-publish-attachment
+	       :recursive t)
 	 (list "all"
-	       :components (list "content" "docs" "presentations")))))
+	       :components (list "content" "docs" "presentations" "assets")))))
