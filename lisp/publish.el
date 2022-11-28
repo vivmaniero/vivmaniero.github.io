@@ -98,7 +98,7 @@
 	       :html-postamble nil
 	       :html-head-include-default-style nil)
 	 (list "assets"
-	       :base-extension "webp\\|png\\|jpe?g"
+	       :base-extension "webp\\|png\\|jpe?g\\|svg"
 	       :base-directory "assets"
 	       :publishing-directory "public/assets"
 	       :publishing-function 'org-publish-attachment

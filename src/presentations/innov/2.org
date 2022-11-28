@@ -46,3 +46,49 @@ Voyons les plus grands solutions dans le marché 👀
   - [X] Axé sur les employés
   - [ ] Open Source
   - [ ] Software as a Service
+
+
+* Diagnostique stratégie
+
+** SWOT
+
+#+REVEAL_HTML: <div style="font-size: 0.4em;">
+| Strengths                                                                                                         | Weaknesses                                               | Opportunities                                                    | Threats                                                                |
+|-------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------+------------------------------------------------------------------+------------------------------------------------------------------------|
+| - Focalisation sur la santé mentale des employés                                                                  | - Notre modèle open source pourrait affecter nos revenus | - S'integrer avec d'autres applications, e.g. Outils CRM et ERP. | - Augmentation des coûts du cloud hosting                              |
+| - Software as a Service -- ce qui facilite l'utilisation de notre produit                                         |                                                          | - Une clientele fidèle et reconnaissante                         | - La possibilité d'une faille de confidentialité des données critiques |
+| - Open source -- l'entreprise est libre à copier, modifier et redistribuer le service et à deriver le code source |                                                          | - Parteneriats et acquisitions                                   | - Les attaques DDOS                                                    |
+|                                                                                                                   |                                                          |                                                                  |                                                                        |
+
+
+* Stratégies marketing
+
+** Segmentation
+
+#+begin_src plantuml :file ../../../assets/innovation--segmentation.svg :exports results
+@startmindmap
+<style>
+  .green {
+    BackgroundColor #52b788
+}
+</style>
+
+,*_ Organisation cible
+,** Organisation à but lucratif
+,*** Entreprises privé <<green>>
+,**** Call Centers
+,**** Boites de devloppement et secteur IT <<green>>
+,*** Entreprises public
+,*** Startups
+left side
+,** Organisation à but non lucratif
+,*** NGO <<green>>
+,**** BINGO <<green>>
+,**** ENGO
+,*** Associations
+,*** Fédérations
+@endmindmap
+#+end_src
+
+#+RESULTS:
+[[file:../../../assets/innovation--segmentation.svg]]
