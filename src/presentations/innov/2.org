@@ -1,5 +1,5 @@
 #+TITLE: Analyse de nos stratégies de marketing
-#+OPTIONS: timestamp:nil num:t toc:nil author:nil
+#+OPTIONS: timestamp:nil num:nil toc:nil author:nil
 #+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
 #+REVEAL_THEME: black
 
@@ -20,6 +20,7 @@ performance qui priorise la santé mentale de vos employés.
 Nous avons remarqué une tendance, les entreprises cherchent a
 optimiser et maximiser la productivité de leurs employés, mais elles
 ne peuvent y parvenir sans:
+
 #+ATTR_REVEAL: :frag (frag)
 - un bon work-life balance
 - un environnement de travail agréable
@@ -60,10 +61,29 @@ Voyons les plus grands solutions dans le marché 👀
 | - Open source -- l'entreprise est libre à copier, modifier et redistribuer le service et à deriver le code source |                                                          | - Parteneriats et acquisitions                                   | - Les attaques DDOS                                                    |
 |                                                                                                                   |                                                          |                                                                  |                                                                        |
 
+* Concepte de marketing
 
-* Stratégies marketing
+** Quoi?
 
-** Segmentation
+Hive est une solution SaaS et un analyseur de performance et de prise de décision.
+
+** Qui?
+
+Le secteur IT.
+
+** Pourquoi?
+
+Pour ameliorer le rendement des employés, leur productivité, leur
+santé mentale et par conséquent l'environnement du travail en géneral.
+
+** Comment?
+
+À travers l'analyse approfondi et constante des KPIs ainsi que les
+tests effectués par les employés.
+
+* Stratégies de marketing
+
+** Segmentation et ciblage
 
 #+begin_src plantuml :file ../../../assets/innovation--segmentation.svg :exports results
 @startmindmap
@@ -73,11 +93,11 @@ Voyons les plus grands solutions dans le marché 👀
 }
 </style>
 
-,*_ Organisation cible
+,* Organisation cible
 ,** Organisation à but lucratif
 ,*** Entreprises privé <<green>>
 ,**** Call Centers
-,**** Boites de devloppement et secteur IT <<green>>
+,**** Boites de développement et secteur IT <<green>>
 ,*** Entreprises public
 ,*** Startups
 left side
@@ -92,3 +112,121 @@ left side
 
 #+RESULTS:
 [[file:../../../assets/innovation--segmentation.svg]]
+
+** Positionnement
+
+#+HTML: <img src="/assets/innovation--market-positioning.webp" class="stretch">
+
+* Marketing mix
+
+** Produit
+
+*** Concepte
+
+Outil de prise de décision et analyseur de performance axé sur
+l'amélioration de la santé mentale dans le milieu professionel et en
+entreprises
+
+*** Caractéristiques et fonctionnalités
+
+Notre solution SaaS offre grace à des outils de visualisation de
+données la possibilité d'évaluer la performance des employées et de
+monitoring la productivité en se basant sur l'état de santé mentale et
+de la culture de l'environnement du travail.
+
+*** Nom de marque et logo
+
+#+HTML: <img src="/assets/innovation--logo.png" class="stretch">
+
+*** Gamme
+
+*** Qualité
+
+Nous offrons une qualité comparable aux concurrences.
+
+*** Design et ésthetique
+
+Nous avons choisi les couleurs bleu et blanc pour donner un aspect
+corporate pour ancrer qu'on est un logiciel qui cible les entreprises
+et organisation de grande envergure et la couleur sarcelle afin de
+symboliser l'axe psychologique que porte notre solution.
+
+*** Conditionnement et emaballage
+
+Pas d'emballage, c'est du software... dans le cloud!
+
+#+ATTR_REVEAL: :frag (appear)
+#+HTML: <img src="https://media3.giphy.com/media/mNG0rIdAYvLog0Wr8H/giphy.gif" class="stretch">
+
+*** Notice d'utilisation
+
+#+ATTR_REVEAL: :frag (appear)
+- Nous livrons avec notre application les manuels d'utilisation et la
+  documentation de nos APIs pour les entreprises qui veulent nous
+  integrér avec d'autres outils.
+- Notre solution est open source donc elle doit être developer-friendly.
+
+*** Garantie et SAV
+
+Pas de garantie, mais vous pouvez utiliser le produit pour une période
+d'essai.
+
+** Prix
+
+*** Stratégies du prix
+
+Puisque notre produit est hautement ciblé et nos depenses pour assurer
+nos services sont assez elevé (paiements des psychologue,
+accréditeurs, etc.) nous avons choisi une stratégie d'ecremage afin de
+garantir le maximum de gain.
+
+*** Mode de paiement
+
+- Abonnement mensuel par utilisateur
+  
+*** Condition de paiement
+
+- être une organization legalisé
+
+*** Prix tarifications et réductions
+
+6.2$ sera tarifié par utilisateur par un abonnement mensuel.
+
+On propose des réductions au court des évenements speciales tel que le
+Black Friday, journée internationale de la santé mentale, journée
+internationale du travailleurs, nouvel an, etc.
+
+** Promotion
+
+*** Objectif de la communication
+
+Attirer les entreprises souffrant d'un taux élevé de burnout désirant
+améliorer la qualité de leurs cultures de travails et la satisfaction
+et santé mentale de leurs employées.
+
+*** Supports média/hors média
+
+Nous allons être présents sur YouTube comme réseau social principal.
+
+- Documenter l'utilisation de notre solution à travers des tutos.
+- Promouvoir notre produit ainsi que l'importance de la santé mentale.
+  
+*** Message publicitaire et slogan
+
+Vous ne detesterez plus votre service RH!
+
+*** Stratégie de communication
+
++ push: vidéo-tutoriels, newsletters pour nos abonnées aux nouvelles
+  offres et fonctionnalités, offrir des promotions exclusives aux
+  clients fidéles.
+  
++ pull: social media, porte à porte, stands dans les foires et
+  expositions et evenements, organisation de séminaires et
+  présentations pour promouvoir notre produit.
+
+** Placement
+
++ Canaux de distribution: Nos pipelines
++ Point de vente: Notre site web
++ Stratégies de distribution: Selective

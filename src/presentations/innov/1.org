@@ -35,16 +35,16 @@ Voyons les plus grands solutions dans le marché 🤸
 #+ATTR_REVEAL: :frag (frag)
 ** [[https://www.peoplegoal.com/][PeopleGoal]]
   - [ ] Axé sur les employés
-  - [ ] Open Source
   - [X] Software as a Service
+  - [ ] Open Source
 ** [[https://www.small-improvements.com/][Small Improvements]]
   - [X] Axé sur les employés
   - [X] Software as a Service
   - [ ] Open Source
-** [[https://www.bamboohr.com/][BambooHR]]
+** TODO [[https://www.bamboohr.com/][BambooHR]]
   - [X] Axé sur les employés
+  - [X] Software as a Service
   - [ ] Open Source
-  - [ ] Software as a Service
 
 * "Et... quel est votre solution"?
 :PROPERTIES:
