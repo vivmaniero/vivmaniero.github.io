@@ -1,7 +1,8 @@
-#+TITLE: Analyse de nos stratégies de marketing
+#+TITLE: Stratégies de marketing
+#+SUBTITLE: Analyse de nos stratégies de marketing
 #+OPTIONS: timestamp:nil num:nil toc:nil author:nil
 #+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
-#+REVEAL_THEME: black
+#+REVEAL_THEME: sky
 
 * Introduction
 :PROPERTIES:
@@ -21,7 +22,7 @@ Nous avons remarqué une tendance, les entreprises cherchent a
 optimiser et maximiser la productivité de leurs employés, mais elles
 ne peuvent y parvenir sans:
 
-#+ATTR_REVEAL: :frag (frag)
+#+ATTR_REVEAL: :frag (appear)
 - un bon work-life balance
 - un environnement de travail agréable
 - une analyse intelligente et approfondie sur la performance de vos
@@ -34,32 +35,33 @@ ne peuvent y parvenir sans:
 
 Voyons les plus grands solutions dans le marché 👀
 
-#+ATTR_REVEAL: :frag (frag)
 ** [[https://www.peoplegoal.com/][PeopleGoal]]
+#+ATTR_REVEAL: :frag (appear)
   - [ ] Axé sur les employés
   - [ ] Open Source
   - [X] Software as a Service
 ** [[https://www.small-improvements.com/][Small Improvements]]
+#+ATTR_REVEAL: :frag (appear)
   - [X] Axé sur les employés
   - [X] Software as a Service
   - [ ] Open Source
 ** [[https://www.bamboohr.com/][BambooHR]]
+#+ATTR_REVEAL: :frag (appear)
   - [X] Axé sur les employés
   - [ ] Open Source
-  - [ ] Software as a Service
-
+  - [X] Software as a Service
 
 * Diagnostique stratégie
 
 ** SWOT
 
 #+REVEAL_HTML: <div style="font-size: 0.4em;">
-| Strengths                                                                                                         | Weaknesses                                               | Opportunities                                                    | Threats                                                                |
-|-------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------+------------------------------------------------------------------+------------------------------------------------------------------------|
-| - Focalisation sur la santé mentale des employés                                                                  | - Notre modèle open source pourrait affecter nos revenus | - S'integrer avec d'autres applications, e.g. Outils CRM et ERP. | - Augmentation des coûts du cloud hosting                              |
-| - Software as a Service -- ce qui facilite l'utilisation de notre produit                                         |                                                          | - Une clientele fidèle et reconnaissante                         | - La possibilité d'une faille de confidentialité des données critiques |
-| - Open source -- l'entreprise est libre à copier, modifier et redistribuer le service et à deriver le code source |                                                          | - Parteneriats et acquisitions                                   | - Les attaques DDOS                                                    |
-|                                                                                                                   |                                                          |                                                                  |                                                                        |
+| Strengths                                                                                                         | Weaknesses                                                             | Opportunities                                                    | Threats                                                                |
+|-------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------+------------------------------------------------------------------+------------------------------------------------------------------------|
+| - Focalisation sur la santé mentale des employés                                                                  | - Notre modèle open source pourrait affecter nos revenus               | - S'integrer avec d'autres applications, e.g. Outils CRM et ERP. | - Augmentation des coûts du cloud hosting                              |
+| - Software as a Service -- ce qui facilite l'utilisation de notre produit                                         | - Clojure est une compétence rare, ce qui peut affecter le recrutement | - Une clientele fidèle et reconnaissante                         | - La possibilité d'une faille de confidentialité des données critiques |
+| - Open source -- l'entreprise est libre à copier, modifier et redistribuer le service et à deriver le code source |                                                                        | - Parteneriats et acquisitions                                   | - Les attaques DDOS                                                    |
+|                                                                                                                   |                                                                        |                                                                  |                                                                        |
 
 * Concepte de marketing
 
@@ -140,6 +142,8 @@ de la culture de l'environnement du travail.
 
 *** Gamme
 
+Outils d'analyse de performance et prise de décision. 
+
 *** Qualité
 
 Nous offrons une qualité comparable aux concurrences.
@@ -155,8 +159,7 @@ symboliser l'axe psychologique que porte notre solution.
 
 Pas d'emballage, c'est du software... dans le cloud!
 
-#+ATTR_REVEAL: :frag (appear)
-#+HTML: <img src="https://media3.giphy.com/media/mNG0rIdAYvLog0Wr8H/giphy.gif" class="stretch">
+#+HTML: <img src="https://media3.giphy.com/media/mNG0rIdAYvLog0Wr8H/giphy.gif" height="200" class="fragment">
 
 *** Notice d'utilisation
 
@@ -182,15 +185,15 @@ garantir le maximum de gain.
 
 *** Mode de paiement
 
-- Abonnement mensuel par utilisateur
+Abonnement mensuel par utilisateur
   
 *** Condition de paiement
 
-- être une organization legalisé
+Être une organization legalisé
 
 *** Prix tarifications et réductions
 
-6.2$ sera tarifié par utilisateur par un abonnement mensuel.
+*6.2$* sera tarifié par utilisateur par un abonnement mensuel.
 
 On propose des réductions au court des évenements speciales tel que le
 Black Friday, journée internationale de la santé mentale, journée
@@ -217,11 +220,11 @@ Vous ne detesterez plus votre service RH!
 
 *** Stratégie de communication
 
-+ push: vidéo-tutoriels, newsletters pour nos abonnées aux nouvelles
++ Push: vidéo-tutoriels, newsletters pour nos abonnées aux nouvelles
   offres et fonctionnalités, offrir des promotions exclusives aux
   clients fidéles.
   
-+ pull: social media, porte à porte, stands dans les foires et
++ Pull: social media, porte à porte, stands dans les foires et
   expositions et evenements, organisation de séminaires et
   présentations pour promouvoir notre produit.
 
