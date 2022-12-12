@@ -81,7 +81,7 @@ Voyons les plus grands solutions dans le marché 👀
 
 * Notre solution
 
-#+HTML: <img src="/assets/innovation--mockups-stats.webp" class="stretch">
+#+HTML: <img src="/assets/innovation--solution.webp" class="stretch">
 
 ** Quoi?
 
