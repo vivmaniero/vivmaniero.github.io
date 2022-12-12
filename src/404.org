@@ -1,6 +1,5 @@
 #+TITLE: Page not found
 #+OPTIONS: title:nil
-#+SETUPFILE: setup.org
 
 #+ATTR_HTML: :style font-size:1em;text-align:center;
 #+begin_export html

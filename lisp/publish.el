@@ -103,5 +103,10 @@
 	       :publishing-directory "public/assets"
 	       :publishing-function 'org-publish-attachment
 	       :recursive t)
+	 (list "css"
+	       :base-extension "css"
+	       :base-directory "src/css"
+	       :publishing-directory "public/css"
+	       :publishing-function 'org-publish-attachment)
 	 (list "all"
-	       :components (list "content" "docs" "presentations" "assets")))))
+	       :components (list "content" "docs" "presentations" "css" "assets")))))

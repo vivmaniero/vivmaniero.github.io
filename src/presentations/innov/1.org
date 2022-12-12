@@ -150,6 +150,7 @@ On coche toutes les cases!
   - Data analystes
   - Comptables
 - Psychologues
+
 ** Ressources logicielles
 - Notre stack technologique:
   - Docker, Ansible, Kubernetes
@@ -159,6 +160,7 @@ On coche toutes les cases!
   - Visual Studio Code
   - Emacs =M-x=
   - Vim =:wq=
+
 ** Ressources matérielles
 - Notre headquarters:
   - PCs et Internet

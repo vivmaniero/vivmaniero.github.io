@@ -1,73 +1,94 @@
-#+TITLE: Stratégies de marketing
-#+SUBTITLE: Analyse de nos stratégies de marketing
+#+TITLE: How we do business
 #+OPTIONS: timestamp:nil num:nil toc:nil author:nil
 #+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
-#+REVEAL_THEME: sky
+#+REVEAL_EXTRA_CSS: /css/reveal.css
+#+REVEAL_THEME: blood
+#+REVEAL_PLUGINS: notes
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND:
+#+REVEAL_TITLE_SLIDE_BACKGROUND: https://images.pexels.com/photos/210607/pexels-photo-210607.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
+#+REVEAL_TITLE_SLIDE_BACKGROUND_OPACITY: 0.2
+
 
 * Introduction
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
 
-Nous sommes un groupe d'étudiants qui cherchent à rendre le monde de
-l'entreprise beaucoup plus tolérable à travers un analyseur de
-performance qui priorise la santé mentale de vos employés.
+** Bonheur et productivité
 
-* Quel est notre problème?
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
+#+BEGIN_NOTES
+La productivité dépend fortement du bonheur des employés.
+#+END_NOTES
 
-Nous avons remarqué une tendance, les entreprises cherchent a
-optimiser et maximiser la productivité de leurs employés, mais elles
-ne peuvent y parvenir sans:
+Les employés heureux¹ sont 13% plus productifs, une étude de
+l'Université de Oxford révèle.
 
-#+ATTR_REVEAL: :frag (appear)
-- un bon work-life balance
-- un environnement de travail agréable
-- une analyse intelligente et approfondie sur la performance de vos
-  employés et la croissance de votre entreprise
+** Santé mentale
+
+Dans une enquête² menée par Harvard Business Review, 86% des 1500
+participants ont déclaré qu'ils souhaitaient que la culture de leur
+entreprise soutienne la santé mentale.
+
+** Quoi d'autre?
+
+60% des répondants se sont identifiés comme ayant vécu des troubles
+affectant leur santé mentale.
+
+60% d'entre eux n'ont jamais mentionné leurs troubles dans le lieu de
+travail.
+
+* Problématique
+
+Nous devons prêter attention à la santé mentale de nos employés!
+
+* Problème
+
+Comment créer un meilleur environnement de travail?
+
+Comment rendons-nous nos employés heureux?
 
 * Ce qui existe déjà
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
 
 Voyons les plus grands solutions dans le marché 👀
 
 ** [[https://www.peoplegoal.com/][PeopleGoal]]
 #+ATTR_REVEAL: :frag (appear)
   - [ ] Axé sur les employés
-  - [ ] Open Source
   - [X] Software as a Service
+  - [ ] Open Source
+
+*** Aperçu
+
+#+HTML: <img src="/assets/peoplegoal.png" class="stretch">
+
 ** [[https://www.small-improvements.com/][Small Improvements]]
 #+ATTR_REVEAL: :frag (appear)
   - [X] Axé sur les employés
   - [X] Software as a Service
   - [ ] Open Source
+
+*** Aperçu
+
+#+HTML: <img src="/assets/small-improvements.png" class="stretch">
+
 ** [[https://www.bamboohr.com/][BambooHR]]
 #+ATTR_REVEAL: :frag (appear)
   - [X] Axé sur les employés
-  - [ ] Open Source
   - [X] Software as a Service
+  - [ ] Open Source
 
-* Diagnostique stratégie
+*** Aperçu
 
-** SWOT
+#+HTML: <img src="/assets/bamboohr.jpg" class="stretch">
 
-#+REVEAL_HTML: <div style="font-size: 0.4em;">
-| Strengths                                                                                                         | Weaknesses                                                             | Opportunities                                                    | Threats                                                                |
-|-------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------+------------------------------------------------------------------+------------------------------------------------------------------------|
-| - Focalisation sur la santé mentale des employés                                                                  | - Notre modèle open source pourrait affecter nos revenus               | - S'integrer avec d'autres applications, e.g. Outils CRM et ERP. | - Augmentation des coûts du cloud hosting                              |
-| - Software as a Service -- ce qui facilite l'utilisation de notre produit                                         | - Clojure est une compétence rare, ce qui peut affecter le recrutement | - Une clientele fidèle et reconnaissante                         | - La possibilité d'une faille de confidentialité des données critiques |
-| - Open source -- l'entreprise est libre à copier, modifier et redistribuer le service et à deriver le code source |                                                                        | - Parteneriats et acquisitions                                   | - Les attaques DDOS                                                    |
-|                                                                                                                   |                                                                        |                                                                  |                                                                        |
+* Notre solution
 
-* Concepte de marketing
+#+HTML: <img src="/assets/innovation--mockups-stats.webp" class="stretch">
 
 ** Quoi?
 
-Hive est une solution SaaS et un analyseur de performance et de prise de décision.
+Hive est un analyseur de performance et de prise de décision.
+
+- [X] Axé sur les employés
+- [X] Software as a Service
+- [X] Open Source
 
 ** Qui?
 
@@ -83,11 +104,102 @@ santé mentale et par conséquent l'environnement du travail en géneral.
 À travers l'analyse approfondi et constante des KPIs ainsi que les
 tests effectués par les employés.
 
-* Stratégies de marketing
+* Notre business model
 
-** Segmentation et ciblage
+#+HTML: <img src="/assets/innovation--bmc.webp" class="stretch">
 
-#+begin_src plantuml :file ../../../assets/innovation--segmentation.svg :exports results
+* Etude technique
+
+** Interfaces
+
+*** Dashboard
+
+#+HTML: <img src="/assets/innovation--mockups-dashboard.webp" class="stretch">
+
+*** Page d'authentification
+
+#+HTML: <img src="/assets/innovation--mockups-login.webp" class="stretch">
+
+*** Quiz
+
+#+HTML: <img src="/assets/innovation--mockups-quiz.webp" class="stretch">
+
+*** Statistiques
+
+#+HTML: <img src="/assets/innovation--mockups-stats.webp" class="stretch">
+
+** Automatisation & deploiement
+
+- Ansible
+- Docker
+- Kubernetes
+
+** Base de données
+
+#+begin_export html
+<figure>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1024px-Postgresql_elephant.svg.png"
+       height="300"
+       alt="PostgreSQL logo">
+  <figcaption>PostgreSQL: performance, scalabilité, sécurité.</figcaption>
+</figure>
+#+end_export    
+
+** Développement backend
+
+#+begin_export html
+<figure>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Clojure_logo.svg/1024px-Clojure_logo.svg.png"
+       height="300"
+       alt="Clojure logo">
+  <figcaption>Clojure: la performance du JVM avec la flexibilité de Lisp.</figcaption>
+</figure>
+#+end_export
+
+** Développment frontend
+
+#+begin_export html
+<figure>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Vue.js_Logo_2.svg"
+       height="300"
+       alt="VueJS logo">
+  <figcaption>Vue.js: Framework frontend performant avec un ecosystème riche.</figcaption>
+</figure>
+#+end_export
+    
+** Outils de developpement
+
+Peu importe les outils, éditeurs de texte ou IDEs que nos employés
+utilisent pour faire leur travail, nous voulons qu'ils soient heureux!
+
+** Visual Studio Code
+
+#+HTML: <img src="https://code.visualstudio.com/assets/home/home-screenshot-linux-lg.png">
+
+** Emacs
+
+#+HTML: <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Emacs27_showing_Org%2C_Magit%2C_and_Dired_with_the_modus-operandi_theme.png">
+
+** Vim
+
+#+HTML: <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Vim-%28logiciel%29-console.png">
+    
+* Analyse stratégique
+
+** SWOT
+
+#+REVEAL_HTML: <div style="font-size: 0.4em;">
+| Strengths                                                                                                         | Weaknesses                                                             | Opportunities                                                    | Threats                                                                |
+|-------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------+------------------------------------------------------------------+------------------------------------------------------------------------|
+| - Focalisation sur la santé mentale des employés                                                                  | - Notre modèle open source pourrait affecter nos revenus               | - S'integrer avec d'autres applications, e.g. Outils CRM et ERP. | - Augmentation des coûts du cloud hosting                              |
+| - Software as a Service -- ce qui facilite l'utilisation de notre produit                                         | - Clojure est une compétence rare, ce qui peut affecter le recrutement | - Une clientele fidèle et reconnaissante                         | - La possibilité d'une faille de confidentialité des données critiques |
+| - Open source -- l'entreprise est libre à copier, modifier et redistribuer le service et à deriver le code source |                                                                        | - Parteneriats et acquisitions                                   | - Les attaques DDOS                                                    |
+
+* Stratégie marketing
+
+** Segmentation
+
+#+begin_src plantuml :file ../../../assets/innovation--segmentation.svg :exports none
 @startmindmap
 <style>
   .green {
@@ -102,7 +214,6 @@ tests effectués par les employés.
 ,**** Boites de développement et secteur IT <<green>>
 ,*** Entreprises public
 ,*** Startups
-left side
 ,** Organisation à but non lucratif
 ,*** NGO <<green>>
 ,**** BINGO <<green>>
@@ -112,8 +223,28 @@ left side
 @endmindmap
 #+end_src
 
-#+RESULTS:
-[[file:../../../assets/innovation--segmentation.svg]]
+#+HTML: <img src="/assets/innovation--segmentation.svg" class="stretch">
+
+** Ciblage
+
+#+begin_src plantuml :file ../../../assets/innovation--ciblage.svg :exports none
+@startmindmap
+<style>
+  .green {
+    BackgroundColor #52b788
+}
+</style>
+
+,* Organisation à but lucratif
+,** Entreprises privé <<green>>
+,*** Call Centers
+,*** Boites de développement et secteur IT <<green>>
+,** Entreprises public
+,** Startups
+@endmindmap
+#+end_src
+
+#+HTML: <img src="/assets/innovation--ciblage.svg" class="stretch">
 
 ** Positionnement
 
@@ -233,3 +364,12 @@ Vous ne detesterez plus votre service RH!
 + Canaux de distribution: Nos pipelines
 + Point de vente: Notre site web
 + Stratégies de distribution: Selective
+
+* Etude financière
+
+* Conclusion
+
+* Citations
+
+- [1] https://www.ox.ac.uk/news/2019-10-24-happy-workers-are-13-more-productive
+- [2] https://hbr.org/2021/10/its-a-new-era-for-mental-health-at-work
