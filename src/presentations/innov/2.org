@@ -9,8 +9,15 @@
 #+REVEAL_TITLE_SLIDE_BACKGROUND: https://images.pexels.com/photos/210607/pexels-photo-210607.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
 #+REVEAL_TITLE_SLIDE_BACKGROUND_OPACITY: 0.2
 
-
 * Introduction
+
+** Qui sommes nous
+
+#+HTML: <img src="/assets/innovation--members.png" width="600">
+
+** Notre logo
+
+#+HTML: <img src="/assets/innovation--logo.png" width="300">
 
 ** Bonheur et productivité
 
@@ -144,7 +151,7 @@ tests effectués par les employés.
        alt="PostgreSQL logo">
   <figcaption>PostgreSQL: performance, scalabilité, sécurité.</figcaption>
 </figure>
-#+end_export    
+#+end_export
 
 ** Développement backend
 
@@ -270,11 +277,7 @@ de la culture de l'environnement du travail.
 
 *** Nom de marque et logo
 
-#+HTML: <img src="/assets/innovation--logo.png" class="stretch">
 
-*** Gamme
-
-Outils d'analyse de performance et prise de décision. 
 
 *** Qualité
 
@@ -359,6 +362,8 @@ Vous ne detesterez plus votre service RH!
 + Pull: social media, porte à porte, stands dans les foires et
   expositions et evenements, organisation de séminaires et
   présentations pour promouvoir notre produit.
+
+*** Spot publicitaire
 
 ** Placement
 
