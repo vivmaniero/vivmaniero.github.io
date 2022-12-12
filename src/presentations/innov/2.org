@@ -1,4 +1,5 @@
 #+TITLE: How we do business
+#+SUBTITLE: https://vm.grtcdr.tn/p/innov/2
 #+OPTIONS: timestamp:nil num:nil toc:nil author:nil
 #+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
 #+REVEAL_EXTRA_CSS: /css/reveal.css
@@ -254,7 +255,7 @@ utilisent pour faire leur travail, nous voulons qu'ils soient heureux!
 
 ** Produit
 
-*** Concepte
+*** Concept
 
 Outil de prise de décision et analyseur de performance axé sur
 l'amélioration de la santé mentale dans le milieu professionel et en
