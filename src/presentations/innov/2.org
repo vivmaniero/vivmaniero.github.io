@@ -203,6 +203,12 @@ utilisent pour faire leur travail, nous voulons qu'ils soient heureux!
 | - Software as a Service -- ce qui facilite l'utilisation de notre produit                                         | - Clojure est une compétence rare, ce qui peut affecter le recrutement | - Une clientele fidèle et reconnaissante                         | - La possibilité d'une faille de confidentialité des données critiques |
 | - Open source -- l'entreprise est libre à copier, modifier et redistribuer le service et à deriver le code source |                                                                        | - Parteneriats et acquisitions                                   | - Les attaques DDOS                                                    |
 
+** Facteurs clés de succès
+
+- Deadlines réalistes, accès au ressources nécessaires, objectifs clairs
+- Collaboration, engagement
+- Evaluer les risques et analyser les vulnérabilités
+
 * Stratégie marketing
 
 ** Segmentation
