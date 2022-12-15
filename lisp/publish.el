@@ -1,20 +1,4 @@
-;; Initialize the package manager
-(require 'package)
-
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-  
-(package-initialize)
-
-(unless package-archive-contents
-  (package-refresh-contents))
-
-(normal-top-level-add-subdirs-to-load-path)
-
-;; Packages to install from external archives
-(package-install 'ox-reveal)
-
 ;; Load packages
-(require 'ox-reveal)
 (require 'ox-publish)
 
 ;;; Configurations:
@@ -84,29 +68,11 @@
 	       :html-postamble nil
 	       :html-head-extra html-head
 	       :html-head-include-default-style nil)
-	 (list "presentations"
-	       :base-extension "org"
-	       :base-directory "src/presentations"
-	       :publishing-directory "public/p"
-	       :publishing-function 'org-reveal-publish-to-reveal
-	       :recursive t
-	       :with-toc t
-	       :with-title t
-	       :html-doctype "html5"
-	       :html-html5-fancy t
-	       :html-preamble nil
-	       :html-postamble nil
-	       :html-head-include-default-style nil)
 	 (list "assets"
 	       :base-extension "webp\\|png\\|jpe?g\\|svg"
 	       :base-directory "assets"
 	       :publishing-directory "public/assets"
 	       :publishing-function 'org-publish-attachment
 	       :recursive t)
-	 (list "css"
-	       :base-extension "css"
-	       :base-directory "src/css"
-	       :publishing-directory "public/css"
-	       :publishing-function 'org-publish-attachment)
 	 (list "all"
-	       :components (list "content" "docs" "presentations" "css" "assets")))))
+	       :components (list "content" "docs" "assets")))))
