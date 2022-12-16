@@ -28,7 +28,7 @@ SOFTWARE.
 
 * TP1: Langage de Définition des Données (LDD)
 
-#+HTML: <img alt="LDD schemas" src="/assets/dbms--schema-a.png" width="70%"/>
+#+HTML: <img alt="LDD schemas" src="/assets/dbms--schema-a.webp" />
 
 ** Question 1
 
@@ -630,7 +630,7 @@ ON liv.idL = com.idL;
 
 * TP HR
 
-#+HTML: <img alt="HR schemas" src="/assets/dbms--schema-b.png" width="70%"/>
+#+HTML: <img alt="HR schemas" src="/assets/dbms--schema-b.webp" />
 
 ** Partie 1
 :PROPERTIES:
