@@ -1,5 +1,5 @@
 #+TITLE: firewalld
-#+INDEX: Linux!firewalld
+#+INDEX: Linux System Administration!firewalld
 
 1. Vous devez autoriser l’accès au site Web sur votre serveur, de
    sorte que le site Web ne soit accessible qu'à partir de

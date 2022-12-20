@@ -1,5 +1,5 @@
 #+TITLE: iptables
-#+INDEX: Linux!iptables
+#+INDEX: Linux System Administration!iptables
 
 - Ajoute une règle dans la chaine =OUTPUT= de la table =filter=. Cette
   règle accepte tous les paquets à destination du port 80.

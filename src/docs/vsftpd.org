@@ -1,5 +1,5 @@
 #+TITLE: vsftpd
-#+INDEX: Linux!vsftpd
+#+INDEX: Linux System Administration!vsftpd
 
 1. [@1] Installer le serveur ftp sécurisé vsftp:
 
