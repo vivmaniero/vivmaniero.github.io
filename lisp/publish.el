@@ -38,6 +38,9 @@
 		 (a ((href . "/"))
 		    "home"))
 	     (li nil
+		 (a ((href . "/docs/theindex"))
+		    "index"))
+	     (li nil
 		 (a ((href . "https://github.com/vivmaniero"))
 		    "github")))))
   "Define an HTML snippet/template used as a preamble across all projects.")
