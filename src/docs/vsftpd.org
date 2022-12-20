@@ -4,13 +4,13 @@
 1. [@1] Installer le serveur ftp sécurisé vsftp:
 
    #+begin_src sh
-   yum install vsftpd
+yum install vsftpd
    #+end_src
 
    On doit l'activer pour y accéder:
 
    #+begin_src sh
-   systemctl enable --now vsftpd
+systemctl enable --now vsftpd
    #+end_src
 
 2. [@2] Sans modifier le fichier de configuration du serveur et à partir
@@ -18,7 +18,7 @@
    la barre d’adresse de votre navigateur:
 
    #+begin_src sh
-   curl ftp://centi.grtcdr.tn
+curl ftp://centi.grtcdr.tn
    #+end_src
 
    Que remarquez-vous?
@@ -35,7 +35,7 @@
 3. [@3] Installez un client ftp
 
    #+begin_src sh
-   yum install ftp
+yum install ftp
    #+end_src
 
 4. [@4] Utilisez la commande ftp pour accéder aux fichiers du serveur et
@@ -48,15 +48,15 @@
    serveur FTP:
 
    #+begin_src sh
-   firewall-cmd --add-port=20/tcp --zone=public --permanent
-   firewall-cmd --add-port=21/tcp --zone=public --permanent
+firewall-cmd --add-port=20/tcp --zone=public --permanent
+firewall-cmd --add-port=21/tcp --zone=public --permanent
    #+end_src
 
    Redémarrons le pare-feu pour prendre en compte la nouvelle
    configuration:
 
    #+begin_src sh
-   firewall-cmd --reload
+firewall-cmd --reload
    #+end_src
 
    #+begin_quote
@@ -112,7 +112,7 @@
    utilisation la commande suivante:
 
    #+begin_src sh
-   echo "grtcdr" | /etc/vsftpd/chroot_list
+echo "grtcdr" | /etc/vsftpd/chroot_list
    #+end_src
 
    Cet utilisateur maintenant ne peut pas quitter son =$HOME=.
@@ -122,7 +122,7 @@
    Il suffit de créer la répertoire:
 
    #+begin_src sh
-   mkdir -p /ftp/share
+mkdir -p /ftp/share
    #+end_src
 
    Et de la saisir dans l'option =local_root= dans le fichier =vsftpd.conf=.

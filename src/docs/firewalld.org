@@ -5,20 +5,20 @@
    sorte que le site Web ne soit accessible qu'à partir de
    =192.168.122.0/24=.
 
-   #+begin_src sh
-   firewall-cmd \
-       --permanent \
-       --add-rich-rule='rule family="ipv4" source address="192.168.122.0/24" \
-                             service name="http" accept'
-   #+end_src
+#+begin_src sh
+firewall-cmd \
+    --permanent \
+    --add-rich-rule='rule family="ipv4" source address="192.168.122.0/24" \
+                          service name="http" accept'
+#+end_src
 
 2. Vous devez transférer le port =4030= vers le port =22= uniquement
    si l'adresse source est dans =192.168.122.1=.
 
    #+begin_src sh
-   firewall-cmd \
-       --permanent \
-       --add-rich-rule='rule family="ipv4" source address="192.168.122.0/24" \
+firewall-cmd \
+    --permanent \
+    --add-rich-rule='rule family="ipv4" source address="192.168.122.0/24" \
                              forward-port port=4030 protocol="tcp" to-port=22'
    #+end_src
 
@@ -27,26 +27,26 @@
    partir de =192.168.122.0/24=.
 
    #+begin_src sh
-   firewall-cmd \
-       --permanent \
-       --add-rich-rule='rule family="ipv4" source address="192.168.122.0/24" \
+firewall-cmd \
+    --permanent \
+    --add-rich-rule='rule family="ipv4" source address="192.168.122.0/24" \
                              service name="smb" accept'
    #+end_src
 
-4. Bloquez le port 80 du serveur sur 192.168.122.1, mais le service
-   doit être accessible à toutes les autres adresses.
+4. Bloquez le port =80= du serveur sur =192.168.122.1=, mais le
+   service doit être accessible à toutes les autres adresses.
 
    #+begin_src sh
-   firewall-cmd \
-       --permanent \
-       --add-rich-rule='rule family="ipv4" source address="192.168.122.1" \
+firewall-cmd \
+    --permanent \
+    --add-rich-rule='rule family="ipv4" source address="192.168.122.1" \
                              service name="http" reject'
    #+end_src
 
 5. Vous devez configurer votre serveur Linux en tant que routeur.
 
    Nous devons activez la fonctionnalité IP Masquerade.
-   
+
    #+begin_quote
    IP Masquerade is a networking function in Linux similar to the
    one-to-many (1:Many) NAT (Network Address Translation) servers
@@ -60,11 +60,11 @@
    #+end_quote
 
    #+begin_src sh
-   firewall-cmd --permanent --add-masquerade
+firewall-cmd --permanent --add-masquerade
    #+end_src
 
    #+begin_src sh
-   firewall-cmd --reload
+firewall-cmd --reload
    #+end_src
 
    Pour que notre "routeur" puisse se comporter comme un routeur, il
@@ -74,5 +74,5 @@
    du noyau.
 
    #+begin_src sh
-   echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
    #+end_src

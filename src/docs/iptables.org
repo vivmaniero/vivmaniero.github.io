@@ -5,13 +5,13 @@
   règle accepte tous les paquets à destination du port 80.
   
   #+begin_src sh
-  iptables -t filter -A OUTPUT --dport 80 -j ACCEPT
+iptables -t filter -A OUTPUT --dport 80 -j ACCEPT
   #+end_src
 
 - Supprime la règle n°2 de la chaine =INPUT= dans la table =filter=:
 
   #+begin_src sh
-  iptables -t filter -D INPUT 2
+iptables -t filter -D INPUT 2
   #+end_src
 
 - Remplace la règle n°2 de la chaine =OUTPUT= de la table =filter= par
@@ -20,7 +20,7 @@
   aux machines sources (=DROP=).
 
   #+begin_src sh
-  iptables -t filter -R OUTPUT 2 ! -s 192.168.0.0 -j DROP
+iptables -t filter -R OUTPUT 2 ! -s 192.168.0.0 -j DROP
   #+end_src
 
 - Nouvelle règle dans la chaine =INPUT= de la table =filter= qui rejette tous les
@@ -28,7 +28,7 @@
   avertit du rejet (=REJECT=).
 
   #+begin_src sh
-  iptables -t filter -A INPUT -s 192.178.1.1 -j REJECT
+iptables -t filter -A INPUT -s 192.178.1.1 -j REJECT
   #+end_src
 
 - Nouvelle règle dans la chaine =INPUT= de la table =filter= qui teste
@@ -36,7 +36,7 @@
   correspondant à une nouvelle session.
 
   #+begin_src sh
-  iptables -t filter -A INPUT 1 -m state --state NEW -j ACCEPT
+iptables -t filter -A INPUT 1 -m state --state NEW -j ACCEPT
   #+end_src
 
 - Nouvelle règle n° 5 dans la chaine =INPUT= de la table =filter= qui
@@ -44,5 +44,5 @@
   chaine =INTERNE=.
 
   #+begin_src sh
-  iptabes -t filter -A INPUT -i eth0 -j INTERNE
+iptabes -t filter -A INPUT -i eth0 -j INTERNE
   #+end_src
