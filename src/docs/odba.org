@@ -1,5 +1,5 @@
 #+TITLE: Oracle Database Administration
-#+INDEX: Oracle Database Administration
+#+INDEX: Databases!Oracle Database Administration
 #+OPTIONS: toc:1
 #+PROPERTY: header-args:sql :padline no :comments org
 

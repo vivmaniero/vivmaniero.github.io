@@ -1,5 +1,5 @@
 #+TITLE: Securiser sshd avec xinetd
-#+INDEX: xinetd!sshd
+#+INDEX: Linux!xinetd!sshd
 
 Créer une règle qui autorise, seulement, la machine client à se
 connecter avec ssh sur la machine serveur.

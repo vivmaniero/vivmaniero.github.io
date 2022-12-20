@@ -1,5 +1,5 @@
 #+TITLE: Database Management Systems III
-#+INDEX: Database Management Systems III
+#+INDEX: Databases!Database Management Systems III
 #+OPTIONS: toc:1
 
 #+begin_export ascii

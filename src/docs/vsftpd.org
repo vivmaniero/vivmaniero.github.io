@@ -1,0 +1,132 @@
+#+TITLE: vsftpd
+#+INDEX: Linux!vsftpd
+
+1. [@1] Installer le serveur ftp sécurisé vsftp:
+
+   #+begin_src sh
+   yum install vsftpd
+   #+end_src
+
+   On doit l'activer pour y accéder:
+
+   #+begin_src sh
+   systemctl enable --now vsftpd
+   #+end_src
+
+2. [@2] Sans modifier le fichier de configuration du serveur et à partir
+   d’une machine distante, tapez l’adresse de votre serveur ftp dans
+   la barre d’adresse de votre navigateur:
+
+   #+begin_src sh
+   curl ftp://centi.grtcdr.tn
+   #+end_src
+
+   Que remarquez-vous?
+
+   On reçoit ce qui suit:
+
+   #+begin_example
+   curl: (7) Failed to connect to centi.grtcdr.tn
+   port 21 after 4 ms: Couldn't connect to server
+   #+end_example
+
+   Le service est inaccessible via le web.
+
+3. [@3] Installez un client ftp
+
+   #+begin_src sh
+   yum install ftp
+   #+end_src
+
+4. [@4] Utilisez la commande ftp pour accéder aux fichiers du serveur et
+   naviguer dans le système de fichier (en utilisant des comptes
+   utilisateur).
+
+   Que remarquez-vous?
+
+   Nous devons créer deux règles pour autoriser l'accès externe au
+   serveur FTP:
+
+   #+begin_src sh
+   firewall-cmd --add-port=20/tcp --zone=public --permanent
+   firewall-cmd --add-port=21/tcp --zone=public --permanent
+   #+end_src
+
+   Redémarrons le pare-feu pour prendre en compte la nouvelle
+   configuration:
+
+   #+begin_src sh
+   firewall-cmd --reload
+   #+end_src
+
+   #+begin_quote
+   On peut maintenant naviguer la répertoire public de notre service
+   FTP via son interface web.
+   #+end_quote
+
+   Nous pouvons nous maintenant nous authentifier sans problème avec
+   le compte =ftp= et son mot de passe =ftp= ou bien avec =anonymous=
+   et =anonymous=:
+
+   #+begin_example
+   ftp -p centi.grtcdr.tn
+   #+end_example
+
+   ftp nous repond avec un dialogue et nous demande le nom
+   d'utilisateur (=ftp=) et son mot de passe (=ftp=):
+
+   #+begin_example
+   Connected to centi.grtcdr.tn.
+   220 (vsFTPd 3.0.2)
+   Name (centi.grtcdr.tn:grtcdr): ftp
+   331 Please specify the password.
+   Password: 
+   230 Login successful.
+   Remote system type is UNIX.
+   Using binary mode to transfer files.
+   #+end_example
+
+   On peut lister le contenu de notre serveur FTP. De même, on peut
+   changer notre répertoire courante:
+
+   #+begin_example
+   ftp> ls
+   227 Entering Passive Mode (192,168,122,2,35,73).
+   150 Here comes the directory listing.
+   drwxr-xr-x    2 0        0               6 Jun 09  2021 pub
+   226 Directory send OK.
+
+   ftp> cd pub
+   250 Directory successfully changed.
+   #+end_example
+
+5. [@5] Emprisonnez les utilisateurs dans leurs répertoires personnelles.
+
+   Pour achever ceci, il faut:
+   1. mettre un =YES= devant =chroot_local_user=
+   2. activer =chroot_list_file= en le donnant un fichier à travers
+      lequel il va déterminer la liste d'utilisateurs à emprisonner,
+      e.g. =/etc/vsftpd/chroot_list=.
+
+   Je vais mettre l'utilisateur =grtcdr= dans ce fichier en
+   utilisation la commande suivante:
+
+   #+begin_src sh
+   echo "grtcdr" | /etc/vsftpd/chroot_list
+   #+end_src
+
+   Cet utilisateur maintenant ne peut pas quitter son =$HOME=.
+
+7. [@7] Partagez le dossier =/ftp/share=
+
+   Il suffit de créer la répertoire:
+
+   #+begin_src sh
+   mkdir -p /ftp/share
+   #+end_src
+
+   Et de la saisir dans l'option =local_root= dans le fichier =vsftpd.conf=.
+
+   #+begin_example
+   local_root=/ftp/share
+   #+end_example

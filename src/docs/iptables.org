@@ -1,0 +1,48 @@
+#+TITLE: iptables
+#+INDEX: Linux!iptables
+
+- Ajoute une règle dans la chaine =OUTPUT= de la table =filter=. Cette
+  règle accepte tous les paquets à destination du port 80.
+  
+  #+begin_src sh
+  iptables -t filter -A OUTPUT --dport 80 -j ACCEPT
+  #+end_src
+
+- Supprime la règle n°2 de la chaine =INPUT= dans la table =filter=:
+
+  #+begin_src sh
+  iptables -t filter -D INPUT 2
+  #+end_src
+
+- Remplace la règle n°2 de la chaine =OUTPUT= de la table =filter= par
+  une nouvelle. Cette nouvelle règle supprime tous les paquets qui ne
+  viennent pas du réseau =198.168.0.0=. Il y n'a pas de notification
+  aux machines sources (=DROP=).
+
+  #+begin_src sh
+  iptables -t filter -R OUTPUT 2 ! -s 192.168.0.0 -j DROP
+  #+end_src
+
+- Nouvelle règle dans la chaine =INPUT= de la table =filter= qui rejette tous les
+  paquets qui viennent de la machine =192.168.1.1=. La machine est
+  avertit du rejet (=REJECT=).
+
+  #+begin_src sh
+  iptables -t filter -A INPUT -s 192.178.1.1 -j REJECT
+  #+end_src
+
+- Nouvelle règle dans la chaine =INPUT= de la table =filter= qui teste
+  l'état des paquets en entrée et accepte tous les paquets
+  correspondant à une nouvelle session.
+
+  #+begin_src sh
+  iptables -t filter -A INPUT 1 -m state --state NEW -j ACCEPT
+  #+end_src
+
+- Nouvelle règle n° 5 dans la chaine =INPUT= de la table =filter= qui
+  renvoie tous les paquets arrivant sur l'interface =eth0= vers la
+  chaine =INTERNE=.
+
+  #+begin_src sh
+  iptabes -t filter -A INPUT -i eth0 -j INTERNE
+  #+end_src
