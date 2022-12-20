@@ -1,0 +1,56 @@
+#+TITLE: Securiser sshd avec xinetd
+#+INDEX: xinetd!sshd
+
+Créer une règle qui autorise, seulement, la machine client à se
+connecter avec ssh sur la machine serveur.
+
+On doit tout d'abord rejeter tout traffic visant le daemon =sshd=:
+
+#+name: hosts.deny-sshd
+#+caption: /etc/hosts.deny
+#+begin_src conf
+ALL: sshd
+#+end_src
+
+Créez une règle pour tout interdire.
+
+#+caption: /etc/hosts.deny
+#+begin_src conf
+sshd: 192.168.122.1
+#+end_src
+
+Installer le service xinetd.
+
+#+begin_example
+yum install xinetd
+#+end_example
+
+Configurer le système de telle sorte que =ssh= soit lancé par =xinetd=
+plutôt que d’être lancé en arrière-plan.
+
+#+begin_src conf
+service ssh {
+        disable         = no
+        wait            = no
+        flags           = REUSE
+        socket_type     = stream
+        user            = root
+        server          = /usr/sbin/sshd
+        server_args     = -i
+}
+#+end_src
+
+Désactivons le =sshd.service= de systemd:
+
+#+begin_src sh
+systemctl disable --now sshd
+#+end_src
+
+Paramétrer le contenu des logs dans le fichier =/var/log/ssh_xinetd.log= tels que:
+- En cas de succès, avoir une idée sur l’identifiant de l'utilisateur, la durée de connexion, l'adresse IP du client.
+- En cas d'echec, avoir une idée sur l’identifiant de l'utilisateur, le nombre de tentative, l'adresse IP du client
+
+#+begin_src conf
+log_on_success = USERID DURATION HOST
+log_on_failure = USERID ATTEMPT HOST
+#+end_src
