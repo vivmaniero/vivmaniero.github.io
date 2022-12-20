@@ -1,0 +1,510 @@
+#+TITLE: Oracle Database Administration
+#+INDEX: Oracle Database Administration
+#+OPTIONS: toc:1
+#+PROPERTY: header-args:sql :padline no :comments org
+
+#+LATEX_HEADER: \usepackage{parskip}
+
+* TP1
+:PROPERTIES:
+:header-args:sql: :tangle tp1.sql
+:END:
+
+N.B: Remplacez =XEPDB1= par la PDB dont se trouve les tables de
+l'utilisateur HR.
+
+Ouvrez la ligne de commande SQL et connectez-vous avec le compte
+administrateur:
+
+#+begin_src sh :tangle no
+sqlplus / AS SYSDBA
+#+end_src
+
+1. Donner la liste des vues du dictionnaire de données d'Oracle triée
+   par nom.
+
+   #+begin_src sql
+   SELECT * FROM user_objects
+   WHERE object_type = 'VIEW'
+   ORDER BY object_name;
+   #+end_src
+
+2. Donner la liste des utilisateurs créés sur le serveur. Afficher
+   leur nom et la date de leur création.
+
+   #+begin_src sql
+   SELECT username, created FROM dba_users;
+   #+end_src
+
+3. Donner la liste des utilisateurs connectés sur votre instance
+   courante.
+
+   #+begin_src sql
+   SELECT username FROM v$session
+   WHERE username IS NOT NULL;
+   #+end_src
+
+4. Déterminer la taille totale de la SGA.
+
+   #+begin_src sql
+   SHOW PARAMETER sga_target;
+   #+end_src
+
+Connectez-vous avec le compte HR:
+
+#+begin_src sh :tangle no
+sqlplus hr@localhost:1521/XEPDB1
+#+end_src
+
+5. [@5] Affichez la liste de ses objets, leur type, la date de création et
+   la date de dernière modification.
+
+   #+begin_src sql
+   SELECT object_name, object_type, created, last_ddl_time
+   FROM user_objects;
+   #+end_src
+
+6. [@6] Afficher les noms des tables sur lesquelles il a des droits.
+
+   #+begin_src sql
+   SELECT table_name
+   FROM user_tables;
+   #+end_src
+
+7. [@7] Ecrire une procédure stockée qui permet d’afficher les noms de ses
+   tables propriétaires.
+
+   #+begin_src sql
+   CREATE OR REPLACE PROCEDURE list_owned_tables
+   IS
+     CURSOR table_names IS
+     SELECT table_name
+     FROM user_tables;
+   BEGIN
+     FOR t in table_names
+     LOOP
+       DBMS_OUTPUT.PUT_LINE('Table: ' || t.table_name);
+     END LOOP;
+   END;
+   / 
+   #+end_src
+
+Connectez-vous avec le compte administrateur:
+
+#+begin_src sh :tangle no
+sqlplus SYSTEM@localhost:1521/XEPDB1
+#+end_src
+
+8. [@8] Afficher le nombre total des tables créés dans le serveur.
+
+   #+begin_src sql
+   SELECT COUNT(*) FROM all_tables;
+   #+end_src
+ 
+9. [@9] Afficher le nombre total de table créés par l’utilisateur =HR=.
+   #+begin_src sql
+   SELECT COUNT(*) FROM all_tables WHERE owner = 'HR';
+   #+end_src
+
+10. [@10] Ecrire une fonction stockée qui prend en paramètre un
+    utilisateur et retourne le nombre de ses objets.
+
+   #+begin_src sql
+   CREATE OR REPLACE FUNCTION user_num_objects(USERNAME VARCHAR2)
+   RETURN NUMBER
+   IS
+     NUM_OBJECTS NUMBER;
+   BEGIN
+     SELECT COUNT(*)
+     INTO NUM_OBJECTS
+     FROM USER_OBJECTS;
+
+     RETURN NUM_OBJECTS;
+   END;
+   /
+   #+end_src
+
+11. [@11] Créer une procédure stockée qui permet de lister les tables
+    relatives à l’utilisateur donné en paramètre. Tester la procédure
+    avec l’utilisateur =HR=.
+
+   #+begin_src sql
+   CREATE OR REPLACE PROCEDURE user_own_tables
+   IS
+     CURSOR own_tables IS
+     SELECT * FROM user_tables;
+   BEGIN
+     FOR t in own_tables
+     LOOP
+       dbms_output.put_line('Table: ' || t.table_name);
+     END LOOP;
+   END;
+   /
+   #+end_src
+
+   #+begin_src sql
+   EXECUTE user_own_tables
+   #+end_src
+
+
+* TP2
+:PROPERTIES:
+:header-args:sql: :tangle tp2.sql
+:END:
+
+1. Créer un tablespace nommé =TBL01= de taille 10Mo reparti en 2
+   fichiers de données:
+   - =fd01tbl01.dbf= de taille 6Mo
+   - =fd02tbl01.dbf= de taille 4Mo
+
+   #+begin_src sql
+   create tablespace tbl01
+   datafile 'fd01tbl01.dbf' size 6m,
+	    'fd02tbl01.dbf' size 4m;
+   #+end_src     
+
+2. Rendre le tablespace =TBL01= le tablespace par défaut du serveur.
+
+   #+begin_src sql
+   alter database default tablespace tbl01;
+   #+end_src
+
+3. Créer un tablespace =TBL02= de taille 25Mo reparti en 3 fichiers de
+   données:
+   - =fd01tbl02.dbf= de taille 10Mo
+   - =fd02tbl02.dbf= de taille 10Mo
+   - =fd0xbl02.dbf= de taille 5Mo
+
+   #+begin_src sql
+   create tablespace tbl02
+   datafile 'fd01tbl02.dbf' size 10m,
+	    'fd02tbl02.dbf' size 10m,
+	    'fd0xtbl02.dbf' size 5m;
+   #+end_src
+
+4. Ajouter un fichier de données nommé =fd02tbl01.dbf= de taille 20Mo
+   au tablespace =TBL01=.
+
+   #+begin_src sql
+   alter tablespace tbl01
+   drop datafile 'fd02tbl01.dbf';
+   #+end_src
+
+   #+begin_src sql
+   alter tablespace tbl01
+   add datafile 'fd02tbl01.dbf' size 20m;	   
+   #+end_src
+
+5. Renommer le fichier =fd0xtbl02.dbf= du tablespace =TBL02= à
+   =fd03tbl02.dbf=.
+
+   #+begin_src sql
+   -- On commence par éteindre le tablespace
+   ALTER TABLESPACE TBL02 OFFLINE;
+
+   mv <old> <new>
+
+   -- Maintenant, on peut modifier le datafile
+   ALTER TABLESPACE TBL02
+   RENAME DATAFILE 'fd0xtbl02.dbf' TO 'fd03tbl02.dbf';
+
+   -- On met le tablespace en ligne de nouveau
+   ALTER TABLESPACE TBL02 ONLINE;
+   #+end_src
+
+6. Afficher la liste des noms des tablespaces créés sur le serveur.
+
+   #+begin_src sql
+   SELECT TABLESPACE_NAME
+   FROM DBA_TABLESPACES;
+   #+end_src
+
+7. Ecrire un bloc PL/SQL qui permet d’afficher le nom de chaque
+   tablespace et le nombre de fichiers qu’il regroupe.
+
+   #+begin_src sql
+   declare
+   cursor tablespaces is
+   select * from dba_tablespaces;
+
+   cursor datafiles(ts dba_tablespaces%rowtype) is
+   select file_name from dba_data_files
+   where tablespace_name = ts.tablespace_name;
+   begin
+   for ts in tablespaces
+     loop
+       dbms_output.put_line('Tablespace: ' || ts.tablespace_name);
+       for df in datafiles(ts)
+       loop
+	 dbms_output.put_line('- File: ' || df.file_name);
+       end loop;
+     end loop;
+   end;
+   /
+   #+end_src
+
+8. Ajouter au tablespace =TBL01= un fichier nommé =fd03tbl01.dbf= de
+   taille initiale 2Mo extensible, la taille de l’extension est de 1M
+   et qui ne peut pas dépasser 4M.
+
+   #+begin_src sql
+   alter tablespace tbl01
+   add datafile 'fd03tbl01.dbf'
+   size 2m
+   autoextend on next 1m maxsize 4m;
+   #+end_src
+
+9. Créer un tablespace temporaire =MonTemp= contenant un fichier de
+   taille 5M et le rendre le tablespace par défaut de la base.
+
+   #+begin_src sql
+   create temporary tablespace montemp
+   tempfile 'tmpmontemp.dbf' size 5m;
+   #+end_src
+
+   #+begin_src sql
+   alter database
+   default temporary tablespace montemp;
+   #+end_src
+
+10. Ecrire une fonction stockée =FN_NBR_TAB_TEMP= qui retourne le nombre
+    de tablespaces temporaires créés sur le serveur.
+
+    #+begin_src sql
+    create or replace function fn_nbr_tab_temp
+    return number
+    is
+      num_temp_tblsp number;
+    begin
+      select count(*) into num_temp_tblsp
+      from dba_tablespaces
+      where contents = 'TEMPORARY';
+    return num_temp_tblsp;
+    end;
+    /
+    #+end_src
+
+11. Créez un utilisateur nommé =TD3= et qui travaille sur le tablespace
+    =TBL01= et vérifier son tablespace temporaire.
+
+    #+begin_src sql
+    create user TD3 identified by td3
+    default tablespace tbl01;
+    #+end_src
+
+    #+begin_src sql
+    select username, temporary_tablespace
+    from dba_users where username = 'TD3';
+    #+end_src
+
+12. Supprimer le tablespace =TBL01= et vérifier le tablespace de
+    l’utilisateur =TD3=.
+
+    Le DBMS ne nous permettra pas de supprimer un tablespace qui a été
+    défini par défaut pour un ou plusieurs utilisateurs. Alors, nous
+    devons réinitialiser le tablespace par défaut.
+
+    #+begin_src sql
+    alter database
+    default tablespace users;
+    #+end_src
+
+    Nous pouvons maintenant supprimer le tablespace.
+
+    #+begin_src sql
+    drop tablespace tbl01;
+    #+end_src
+
+    Voyons le tablespace par défaut pour cet utilisateur.
+
+    #+begin_src sql
+    select username, default_tablespace
+    from dba_users
+    where username = 'TD3';
+    #+end_src
+
+13. Ecrire une procédure stockée =PS_DETAILS_TAB= qui permet
+    d’afficher pour chaque tablespace, son nom, sa taille totale et sa
+    taille occupée.
+
+    #+begin_src sql
+    create or replace procedure ps_details_tab
+    is 
+      cursor cur_tblspc is
+      select dt.tablespace_name,dt.max_size,df.bytes
+      from dba_tablespaces dt
+      inner join dba_free_space df 
+      on df.tablespace_name = dt.tablespace_name;
+    begin
+      for rec in cur_tblspc
+      loop
+	dbms_output.put_line('Tablespace: ' || rec.tablespace_name);
+	dbms_output.put_line('* Size: ' || rec.max_size || ' bytes');
+	dbms_output.put_line('* Used: ' || rec.bytes || ' bytes');
+      end loop;
+    end;
+    /
+    #+end_src
+
+14. Créer la table Etudiants et ajouter des enregistrements en
+    exécutant le code ci-dessous
+
+    #+begin_src sql
+    create table etudiants (
+      num_etud number(10) primary key,
+      nom_etud varchar2(30),
+      moyenne_etud number(4,2)
+    );
+    #+end_src
+
+    #+begin_src sql
+    begin
+      for i in 1 .. 10000 loop
+	insert into etudiants (num_etud, nom_etud, moyenne_etud)
+	values (i , 'Etudiant' || i, 10) ;
+      end loop;
+    end;
+    /
+    #+end_src
+
+
+* TP3
+:PROPERTIES:
+:header-args:sql: :tangle tp3.sql
+:export_file_name: tp3
+:END:
+
+1. Créez un profil =profil_tp3= ayant les spécificités suivantes:
+   - Le temps de connexion est limité à 120 minutes
+   - Le temps d’inactivité est limité à 3 minutes
+   - Le nombre maximum de connexions simultanées est à 2
+   - Suite à une erreur d’authentification (mot de passe), le compte
+     est verrouillé pendant 5 minutes
+     
+     #+begin_src sql
+     create profile profil_tp3 limit
+       connect_time 120
+       idle_time 3
+       sessions_per_user 2
+       failed_login_attempts 1
+       password_grace_time 5/60/24;
+     #+end_src
+
+2. [@2] Créez un utilisateur =TP3= et attribuez-lui le profil
+   =profil_tp3=, le tablespace =USERS= avec un quota de 10M et le
+   tablespace temporaire =TEMP=.
+
+   #+begin_src sql
+   create user tp3
+     default tablespace users
+     quota 10M on users
+     temporary tablespace temp
+     profile profil_tp3;
+   #+end_src
+
+3. [@3] Vérifiez l’attribution du profil en utilisant les vues du
+   dictionnaire de données.
+
+   #+begin_src sql
+   select profile
+   from dba_users
+   where username='TP3';
+   #+end_src
+
+4. [@4] Listez les noms des utilisateurs créés dans le serveur.
+
+   #+begin_src sql
+   select username from dba_users;
+   #+end_src
+
+5. [@5] Créer une procédure qui liste les profils créés dans le serveur.
+
+   #+begin_src sql
+   create or replace procedure list_profiles
+   is
+     cursor cur_profiles is
+     select profile from dba_profiles;
+   begin
+     for rec in cur_profiles
+     loop
+       dbms_output.put_line('Profile:' || rec.profile);
+     end loop;
+   end;
+   /
+   #+end_src
+
+6. [@6] Créez une fonction =verif_password(p_username varchar2,
+   p_password varchar2) RETURN boolean= et y implémenter les
+   conditions suivantes:
+   - La longueur du mot de passe doit être supérieure à 6 caractères
+   - Le mot de passe contient au moins l’un des caractères suivants: =? ! @=
+   - Le nom de l’utilisateur et le mot de passe doivent être différents
+
+   #+begin_src sql
+   create or replace function verif_password
+	  (p_username varchar2, p_password varchar2)
+   return number
+   is
+   begin
+     if (p_username = p_password) then
+       raise_application_error(
+	 -20100,
+	 'Username and password must be different.'
+       );
+     end if;
+
+     if (length(p_password) < 6) then
+       raise_application_error(
+	 -20100,
+	 'Password cannot be shorter than 6 characters.'
+       );
+     end if;
+
+     if (regexp_substr(p_password,'[@!?]+') is null) then
+       raise_application_error(
+	 -20100,
+	 'Password must contain one or more of the following charaters: (?,!,@)'
+       );
+     end if;
+
+     return 1;
+   end;
+   /
+   #+end_src
+  
+7. [@7] Modifiez le profil profil_tp3 de sorte que la fonction
+   verif_password soit la fonction de vérification du mot de passe.
+
+   #+begin_src sql
+   alter profile profil_tp3 limit
+   password_verify_function verif_password;
+   #+end_src
+
+8. [@8] Testez ce profile en créant les utilisateurs (=testtp31= /
+   =testtp31=), (=testtp32= / =system=) et (=testtp33= / =managers=)
+   ayant =profil_tp3= comme profile.
+
+   #+begin_src sql
+   create user testtp31 identified by testtp31
+   profile profil_tp3;
+   #+end_src
+
+   #+begin_src sql
+   create user testtp32 identified by system
+   profile profil_tp3;
+   #+end_src
+
+   #+begin_src sql
+   create user testtp33 identified by managers
+   profile profil_tp3;
+   #+end_src
+
+9. [@9] Supprimez le profile profil_tp3 et vérifiez en utilisant le
+   dictionnaire de données le nouveau profile de l’utilisateur TP3.
+
+   #+begin_src sql
+   drop profile profil_tp3 cascade;
+   #+end_src
+
+   Le profil de l'utilisateur =TP3= était le =profil_tp3=, mais aprés
+   la suppression de ce profil, ça devient =DEFAULT=.
