@@ -33,7 +33,10 @@
    (site/link "https://grtcdr.tn/css/source.css")
    (site/link "https://grtcdr.tn/css/table.css")
    (site/link "https://grtcdr.tn/css/nav.css")
-   (site/link "https://grtcdr.tn/css/org.css"))
+   (site/link "https://grtcdr.tn/css/org.css")
+   (shr-dom-to-xml '(link ((rel . "icon")
+			   (type . "image/x-icon")
+			   (href . "/assets/favicon.ico")))))
   "HTML headers shared across projects.")
 
 (defvar site/preamble
@@ -88,7 +91,7 @@
 	       :html-preamble site/preamble
 	       :html-head-extra site/html-head)
 	 (list "assets"
-	       :base-extension "webp\\|png\\|jpe?g\\|svg"
+	       :base-extension "webp\\|png\\|jpe?g\\|svg\\|ico"
 	       :base-directory "assets"
 	       :publishing-directory "public/assets"
 	       :publishing-function 'org-publish-attachment
