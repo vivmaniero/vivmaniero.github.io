@@ -14,6 +14,12 @@
       org-html-htmlize-output-type nil
       org-html-metadata-timestamp-format "%B %d, %Y")
 
+(defun site/sitemap-format-entry (entry style project)
+  "Format a sitemap entry with its date."
+  (format "[[file:%s][%s]]"
+	  entry
+	  (org-publish-find-title entry project)))
+
 (defun site/link (href)
   "Format the stylesheet located at HREF as a ’link’ tag."
   (shr-dom-to-xml
@@ -35,17 +41,14 @@
    '(nav nil
 	 (ul nil
 	     (li nil
-		 (a ((href . "https://grtcdr.tn"))
-		    "grtcdr.tn"))
-	     (li nil
-		 (a ((href . "/"))
+		 (a ((href . "/index.html"))
 		    "home"))
 	     (li nil
-		 (a ((href . "/docs/theindex"))
-		    "index"))
+		 (a ((href . "/practicum/theindex.html"))
+		    "practicum"))
 	     (li nil
-		 (a ((href . "https://github.com/vivmaniero"))
-		    "github")))))
+		 (a ((href . "/zettelkasten/sitemap.html"))
+		    "zettelkasten")))))
   "Define an HTML snippet/template used as a preamble across all projects.")
 
 (setq org-publish-project-alist
@@ -59,14 +62,27 @@
 	       :html-html5-fancy t
 	       :html-preamble site/preamble
 	       :html-head-extra site/html-head)
-	 (list "docs"
+	 (list "practicum"
 	       :base-extension "org"
-	       :base-directory "src/docs"
-	       :publishing-directory "public/docs"
+	       :base-directory "src/practicum"
+	       :publishing-directory "public/practicum"
 	       :publishing-function 'org-html-publish-to-html
 	       :makeindex t
 	       :section-numbers t
 	       :with-toc t
+	       :html-doctype "html5"
+	       :html-html5-fancy t
+	       :html-preamble site/preamble
+	       :html-head-extra site/html-head)
+	 (list "zettelkasten"
+	       :base-extension "org"
+	       :base-directory "src/zettelkasten"
+	       :publishing-directory "public/zettelkasten"
+	       :publishing-function 'org-html-publish-to-html
+	       :makeindex t
+	       :auto-sitemap t
+	       :sitemap-title "Zettelkasten"
+	       :sitemap-format-entry 'site/sitemap-format-entry
 	       :html-doctype "html5"
 	       :html-html5-fancy t
 	       :html-preamble site/preamble
@@ -78,4 +94,4 @@
 	       :publishing-function 'org-publish-attachment
 	       :recursive t)
 	 (list "all"
-	       :components (list "content" "docs" "assets"))))
+	       :components (list "content" "practicum" "zettelkasten" "assets"))))

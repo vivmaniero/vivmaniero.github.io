@@ -1,0 +1,3 @@
+[submodule "src/zettelkasten"]
+	path = src/zettelkasten
+	url = https://github.com/vivmaniero/zettelkasten.git

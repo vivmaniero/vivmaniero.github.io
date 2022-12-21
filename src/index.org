@@ -2,6 +2,5 @@
 
 [[https://github.com/vivmaniero][vivmaniero]] is a sandbox for independently-written tools and
 documentation, we create [[https://en.wikipedia.org/wiki/Free_software][libre software]] with the goal of benefiting
-the ESPRIT ecosystem.
-
-[[file:docs/theindex.org][Go to the index]] to browse the different documents in this website.
+the ESPRIT ecosystem. If you'd like to give me a hand in organizing
+and centralizing knowledge, please [[mailto:tahaaziz.benali@esprit.tn?subject=Request to join vivmaniero][contact me via email]].
