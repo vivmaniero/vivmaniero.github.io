@@ -79,8 +79,8 @@
 	       :base-directory "src/zettelkasten"
 	       :publishing-directory "public/zettelkasten"
 	       :publishing-function 'org-html-publish-to-html
-	       :makeindex t
 	       :auto-sitemap t
+	       :with-toc nil
 	       :sitemap-title "Zettelkasten"
 	       :sitemap-format-entry 'site/sitemap-format-entry
 	       :html-doctype "html5"
