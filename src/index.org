@@ -4,3 +4,8 @@
 documentation, we create [[https://en.wikipedia.org/wiki/Free_software][libre software]] with the goal of benefiting
 the ESPRIT ecosystem. If you'd like to give me a hand in organizing
 and centralizing knowledge, please [[mailto:tahaaziz.benali@esprit.tn?subject=Request to join vivmaniero][contact me via email]].
+
+Here's what we've worked on so far:
+- Dork:
+  + [[file:dork.org][Org-centric formula-based grade calculator]]
+  + [[https://github.com/vivmaniero/dork][Emacs Lisp grade calculator]] (in-development)

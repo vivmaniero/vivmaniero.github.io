@@ -1,5 +1,4 @@
 #+TITLE: Grade calculator for ESPRIT students
-#+INDEX: Emacs Lisp!Dork
 
 This fragile Org table formula calculates the total average of every
 course you provide.
